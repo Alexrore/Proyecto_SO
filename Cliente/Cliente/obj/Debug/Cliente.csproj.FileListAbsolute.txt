@@ -1,0 +1,11 @@
+D:\SO\Ejercicio guia\Cliente\Cliente\bin\Debug\Cliente.exe.config
+D:\SO\Ejercicio guia\Cliente\Cliente\bin\Debug\Cliente.exe
+D:\SO\Ejercicio guia\Cliente\Cliente\bin\Debug\Cliente.pdb
+D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.csproj.AssemblyReference.cache
+D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.csproj.SuggestedBindingRedirects.cache
+D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.Form1.resources
+D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.Properties.Resources.resources
+D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.csproj.GenerateResource.cache
+D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.csproj.CoreCompileInputs.cache
+D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.exe
+D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.pdb
