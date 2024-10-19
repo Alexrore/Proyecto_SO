@@ -9,3 +9,13 @@ D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.csproj.GenerateResource.c
 D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.csproj.CoreCompileInputs.cache
 D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.exe
 D:\SO\Ejercicio guia\Cliente\Cliente\obj\Debug\Cliente.pdb
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\bin\Debug\Cliente.exe.config
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\bin\Debug\Cliente.exe
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\bin\Debug\Cliente.pdb
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\obj\Debug\Cliente.csproj.AssemblyReference.cache
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\obj\Debug\Cliente.Form1.resources
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\obj\Debug\Cliente.Properties.Resources.resources
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\obj\Debug\Cliente.csproj.GenerateResource.cache
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\obj\Debug\Cliente.csproj.CoreCompileInputs.cache
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\obj\Debug\Cliente.exe
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente\Cliente\obj\Debug\Cliente.pdb

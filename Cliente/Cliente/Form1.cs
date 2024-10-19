@@ -19,11 +19,12 @@ namespace Cliente
         public Form1()
         {
             InitializeComponent();
+
         }
 
         private void Conectrase_Click(object sender, EventArgs e)
         {
-            IPAddress direc = IPAddress.Parse("192.168.56.101");
+            IPAddress direc = IPAddress.Parse("192.168.0.19");
             IPEndPoint ipep = new IPEndPoint(direc, 9050);
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
@@ -51,6 +52,12 @@ namespace Cliente
                 server.Shutdown(SocketShutdown.Both);
 
                 server.Close();
+                Consulta.Visible = false;
+                label3.Visible = false;
+                textBox_Consulta.Visible = false;
+                Medallas.Visible = false;
+                Nombre.Visible = false;
+                Victorias.Visible = false;
             }
             catch(Exception ex)
             {
@@ -79,6 +86,16 @@ namespace Cliente
             server.Receive(msg2);
             mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
             MessageBox.Show(mensaje);
+            if (mensaje == "Inicio de sesion exitoso")
+            {
+                Consulta.Visible = true;
+                label3.Visible = true;
+                textBox_Consulta.Visible = true;
+                Medallas.Visible = true;
+                Nombre.Visible = true;
+                Victorias.Visible = true;
+            }
+            
         }
 
         private void Registrarse_Click(object sender, EventArgs e)
@@ -95,6 +112,49 @@ namespace Cliente
             string mensaje = "1/" + usuario + "/" + pswd;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
+
+            //Recibimos la respuesta del servidor
+            byte[] msg2 = new byte[80];
+            server.Receive(msg2);
+            mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+            MessageBox.Show(mensaje);
+        }
+
+        private void textBox_Consulta_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Consulta_Click(object sender, EventArgs e)
+        {
+
+            string mensaje;
+            // Enviamos al servidor el nombre tecleado
+            if (string.IsNullOrEmpty(textBox_Consulta.Text) )
+            {
+                MessageBox.Show("Por favor, ingresa un ID.");
+                return;
+            }
+            int id = Convert.ToInt32(textBox_Consulta.Text);
+            if (Nombre.Checked == true)
+            {
+                mensaje = "3/" + id;
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+            if (Victorias.Checked == true)
+            {
+                mensaje = "4/" + id;
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+            if (Medallas.Checked == true)
+            {
+                mensaje = "5/" + id;
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }
+
 
             //Recibimos la respuesta del servidor
             byte[] msg2 = new byte[80];

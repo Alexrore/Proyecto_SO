@@ -14,126 +14,7 @@
 
 MYSQL *conn;
 int puerto = 9050;
-void *AtenderCliente(void *socket)
-{
-	int sock_conn;
-	int *s;
-	s = (int *) socket;
-	sock_conn = *s;
-		
-	char peticion[512];
-	char respuesta[512];
-	int ret;
-	
-	conectarBD(); // Conexion a la base de datos
-	
-		int terminar = 0;
-		while (terminar == 0)
-		{
-			
-			
-			ret = read(sock_conn, peticion, sizeof(peticion));
-			peticion[ret] = '\0';
-			printf("Peticion: %s\n", peticion);
-			
-			char *p = strtok(peticion, "/");
-			int codigo = atoi(p);
-			char nombre[20];
-			if (codigo != 0)
-			{
-				p = strtok(NULL, "/");
-				strcpy(nombre, p);
-				printf("Codigo: %d, Nombre: %s\n", codigo, nombre);
-			}
-			
-			if (codigo == 0) // Desconexion
-			{
-				terminar = 1;
-			}
-			else if (codigo == 1) // Registrar
-			{ 
-				char query[512];
-				char password[20];
-				p = strtok(NULL, "/");
-				strcpy(password, p);
-				sprintf(query, "INSERT INTO Jugador(Nombre, contraseña) VALUES ('%s', '%s')", nombre, password);
-				
-				if (mysql_query(conn, query)) 
-				{
-					printf("Error al insertar datos en la tabla: %s\n", mysql_error(conn));
-					sprintf(respuesta, "Error en el registro");
-				} 
-				else 
-				{
-					printf("Usuario registrado con exito\n");
-					sprintf(respuesta, "Registro exitoso");
-				}
-				
-				write(sock_conn, respuesta, strlen(respuesta));
-				
-			} 
-			else if (codigo == 2)  // Iniciar Sesion
-			{
-				char query[512];
-				char password[20];
-				p = strtok(NULL, "/");
-				strcpy(password, p);
-				sprintf(query, "SELECT * FROM Jugador WHERE Nombre='%s' AND contraseña='%s'", nombre, password);
-				
-				if (mysql_query(conn, query)) 
-				{
-					printf("Error en la consulta: %s\n", mysql_error(conn));
-					sprintf(respuesta, "Error en el inicio de sesion");
-				}
-				else 
-				{
-					MYSQL_RES *res = mysql_store_result(conn);
-					if (mysql_num_rows(res) > 0) 
-					{
-						printf("Inicio de sesion exitoso\n");
-						sprintf(respuesta, "Inicio de sesion exitoso");
-					} 
-					else 
-					{
-						printf("Usuario o contraseña incorrectos\n");
-						sprintf(respuesta, "Usuario o contraseña incorrectos");
-					}
-					mysql_free_result(res);
-				}
-				write(sock_conn, respuesta, strlen(respuesta));
-			} 
-			else if (codigo == 3) // Consulta
-			{	
-				char query[512];
-				sprintf(query, "SELECT * FROM Jugador WHERE Nombre='%s'", nombre);
-				
-				if (mysql_query(conn, query)) 
-				{
-					printf("Error en la consulta: %s\n", mysql_error(conn));
-					sprintf(respuesta, "Error en la consulta");
-				} 
-				else 
-				{
-					MYSQL_RES *res = mysql_store_result(conn);
-					MYSQL_ROW row;
-					
-					if ((row = mysql_fetch_row(res))) 
-					{
-						printf("Consulta exitosa\n");
-						sprintf(respuesta, "Nombre: %s, Password: %s", row[1], row[2]);
-					} 
-					else 
-					{
-						sprintf(respuesta, "No se encontraron datos para el usuario");
-					}
-					mysql_free_result(res);
-				}
-				write(sock_conn, respuesta, strlen(respuesta));
-			} 
-		}
-		
-		close(sock_conn);
-}
+
 
 void conectarBD() {
 	conn = mysql_init(NULL);
@@ -155,6 +36,227 @@ void cerrarBD() {
 		mysql_close(conn);
 		printf("Conexion cerrada con la base de datos.\n");
 	}
+}
+void *AtenderCliente(void *socket)
+{
+	int sock_conn;
+	int *s;
+	s = (int *) socket;
+	sock_conn = *s;
+	
+	char peticion[512];
+	char respuesta[512];
+	int ret;
+	
+	conectarBD(); // Conexion a la base de datos
+	
+	int terminar = 0;
+	while (terminar == 0)
+	{
+		
+		
+		ret = read(sock_conn, peticion, sizeof(peticion));
+		peticion[ret] = '\0';
+		printf("Peticion: %s\n", peticion);
+		
+		char *p = strtok(peticion, "/");
+		int codigo = atoi(p);
+		char nombre[20];
+		int id;
+		if (codigo != 0)
+		{
+			p = strtok(NULL, "/");
+			strcpy(nombre, p);
+			printf("Codigo: %d, Nombre: %s\n", codigo, nombre);
+		}
+		
+		if (codigo == 0) // Desconexion
+		{
+			terminar = 1;
+		}
+		else if (codigo == 1) // Registrar
+		{ 
+			char query[512];
+			char password[20];
+			p = strtok(NULL, "/");
+			strcpy(password, p);
+			
+			sprintf(query, "SELECT COUNT(*) FROM Jugador;");
+			
+			if (mysql_query(conn, query)) 
+			{
+				printf("Error al insertar datos en la tabla: %s\n", mysql_error(conn));
+				sprintf(respuesta, "Error en el registro");
+			} 
+			MYSQL_RES *res = mysql_store_result(conn);
+			MYSQL_ROW row;
+			row = mysql_fetch_row(res);
+			id = atoi(row[0])+1;
+			sprintf(query, "INSERT INTO Jugador(ID, Nombre, contraseña) VALUES ('%d', '%s', '%s')", id, nombre, password);
+			
+			
+			if (mysql_query(conn, query)) 
+			{
+				printf("Error al insertar datos en la tabla: %s\n", mysql_error(conn));
+				sprintf(respuesta, "Error en el registro");
+			} 
+			
+			sprintf(query, "INSERT INTO PartidasGanadas(ID, victorias) VALUES ('%d', '0')", id);
+			
+			
+			if (mysql_query(conn, query)) 
+			{
+				printf("Error al insertar datos en la tabla: %s\n", mysql_error(conn));
+				sprintf(respuesta, "Error en el registro");
+			} 
+			
+			sprintf(query, "INSERT INTO MedallasObtenidas(ID, Medallas) VALUES ('%d', '0')", id);
+			
+			
+			if (mysql_query(conn, query)) 
+			{
+				printf("Error al insertar datos en la tabla: %s\n", mysql_error(conn));
+				sprintf(respuesta, "Error en el registro");
+			} 
+			
+			else 
+			{
+				printf("Usuario registrado con exito\n");
+				sprintf(respuesta, "Registro exitoso");
+			}
+			
+			write(sock_conn, respuesta, strlen(respuesta));
+			
+		} 
+		else if (codigo == 2)  // Iniciar Sesion
+		{
+			char query[512];
+			char password[20];
+			p = strtok(NULL, "/");
+			strcpy(password, p);
+			sprintf(query, "SELECT * FROM Jugador WHERE Nombre='%s' AND contraseña='%s'", nombre, password);
+			
+			if (mysql_query(conn, query)) 
+			{
+				printf("Error en la consulta: %s\n", mysql_error(conn));
+				sprintf(respuesta, "Error en el inicio de sesion");
+			}
+			else 
+			{
+				MYSQL_RES *res = mysql_store_result(conn);
+				if (mysql_num_rows(res) > 0) 
+				{
+					printf("Inicio de sesion exitoso\n");
+					sprintf(respuesta, "Inicio de sesion exitoso");
+				} 
+				else 
+				{
+					printf("Usuario o contraseña incorrectos\n");
+					sprintf(respuesta, "Usuario o contraseña incorrectos");
+				}
+				mysql_free_result(res);
+			}
+			write(sock_conn, respuesta, strlen(respuesta));
+		} 
+		else if (codigo == 3) // Consulta
+		{	
+			char query[512];
+			char ID[10];
+			
+			strcpy(ID, p);
+			id = atoi(ID);
+			sprintf(query, "SELECT * FROM Jugador WHERE ID='%d'", id);
+			
+			if (mysql_query(conn, query)) 
+			{
+				printf("Error en la consulta: %s\n", mysql_error(conn));
+				sprintf(respuesta, "Error en la consulta");
+			} 
+			else 
+			{
+				MYSQL_RES *res = mysql_store_result(conn);
+				MYSQL_ROW row;
+				
+				if ((row = mysql_fetch_row(res))) 
+				{
+					printf("Consulta exitosa\n");
+					sprintf(respuesta, "Nombre: %s",row[1]);
+				} 
+				else 
+				{
+					sprintf(respuesta, "No se encontraron datos para el usuario");
+				}
+				mysql_free_result(res);
+			}
+			write(sock_conn, respuesta, strlen(respuesta));
+		}
+		else if (codigo == 4) // Consulta
+		{	
+			char query[512];
+			char ID[10];
+			
+			strcpy(ID, p);
+			id = atoi(ID);
+			sprintf(query, "SELECT * FROM PartidasGanadas WHERE ID='%d'", id);
+			
+			if (mysql_query(conn, query)) 
+			{
+				printf("Error en la consulta: %s\n", mysql_error(conn));
+				sprintf(respuesta, "Error en la consulta");
+			} 
+			else 
+			{
+				MYSQL_RES *res = mysql_store_result(conn);
+				MYSQL_ROW row;
+				
+				if ((row = mysql_fetch_row(res))) 
+				{
+					printf("Consulta exitosa\n");
+					sprintf(respuesta, "Victorias: %d",atoi(row[1]));
+				} 
+				else 
+				{
+					sprintf(respuesta, "No se encontraron datos para el usuario");
+				}
+				mysql_free_result(res);
+			}
+			write(sock_conn, respuesta, strlen(respuesta));
+		} 
+		else if (codigo == 5) // Consulta
+		{	
+			char query[512];
+			char ID[10];
+			
+			strcpy(ID, p);
+			id = atoi(ID);
+			sprintf(query, "SELECT * FROM MedallasObtenidas WHERE ID='%d'", id);
+			
+			if (mysql_query(conn, query)) 
+			{
+				printf("Error en la consulta: %s\n", mysql_error(conn));
+				sprintf(respuesta, "Error en la consulta");
+			} 
+			else 
+			{
+				MYSQL_RES *res = mysql_store_result(conn);
+				MYSQL_ROW row;
+				
+				if ((row = mysql_fetch_row(res))) 
+				{
+					printf("Consulta exitosa\n");
+					sprintf(respuesta, "Medallas: %d",atoi(row[1]));
+				} 
+				else 
+				{
+					sprintf(respuesta, "No se encontraron datos para el usuario");
+				}
+				mysql_free_result(res);
+			}
+			write(sock_conn, respuesta, strlen(respuesta));
+		} 
+	}
+	
+	close(sock_conn);
 }
 
 int main(int argc, char *argv[]) 

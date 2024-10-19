@@ -8,11 +8,10 @@ Nombre Varchar(25),
 contraseña Varchar(25));
 
 CREATE TABLE PartidasGanadas (
-ID VARCHAR(25), victorias integer,
-FOREIGN KEY (ID) REFERENCES Jugador (ID));
+ID integer, 
+victorias integer);
 
 CREATE TABLE MedallasObtenidas (
-Jugador INTEGER NOT NULL,
-Medallas INTEGER NOT NULL,
-FOREIGN KEY (Jugador) REFERENCES Jugador (ID)
+    ID integer, 
+    Medallas INTEGER
 )ENGINE = InnoDB;
