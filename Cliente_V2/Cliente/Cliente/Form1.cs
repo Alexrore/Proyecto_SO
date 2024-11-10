@@ -22,9 +22,9 @@ namespace Cliente
             InitializeComponent();
         }
 
-        private void Conectrase_Click(object sender, EventArgs e)
+        private void Conectarse_Click(object sender, EventArgs e)
         {
-            IPAddress direc = IPAddress.Parse("192.168.56.102");
+            IPAddress direc = IPAddress.Parse("192.168.56.101");
             IPEndPoint ipep = new IPEndPoint(direc, 9050);
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try

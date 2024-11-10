@@ -92,7 +92,7 @@
             this.conectadosGrid.RowTemplate.Height = 24;
             this.conectadosGrid.Size = new System.Drawing.Size(173, 137);
             this.conectadosGrid.TabIndex = 3;
-            this.conectadosGrid.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.conectadosGrid_CellContentClick);
+        
             // 
             // textBox1
             // 

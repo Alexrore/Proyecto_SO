@@ -38,3 +38,18 @@ C:\Users\aaron\Downloads\Version-2-main\Cliente\Cliente\obj\Debug\Cliente.csproj
 C:\Users\aaron\Downloads\Version-2-main\Cliente\Cliente\obj\Debug\Cliente.csproj.CopyComplete
 C:\Users\aaron\Downloads\Version-2-main\Cliente\Cliente\obj\Debug\Cliente.exe
 C:\Users\aaron\Downloads\Version-2-main\Cliente\Cliente\obj\Debug\Cliente.pdb
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\bin\Debug\Cliente.exe.config
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\bin\Debug\Cliente.exe
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\bin\Debug\Cliente.pdb
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\bin\Debug\InicioPartida.exe
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\bin\Debug\InicioPartida.pdb
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\bin\Debug\InicioPartida.exe.config
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.csproj.AssemblyReference.cache
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.csproj.SuggestedBindingRedirects.cache
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.Form1.resources
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.Properties.Resources.resources
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.csproj.GenerateResource.cache
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.csproj.CoreCompileInputs.cache
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.csproj.CopyComplete
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.exe
+C:\Users\arnau\Desktop\Telecos UPC\2o de carrera\SO\Proyecto_SO-main\Cliente_V2\Cliente\Cliente\obj\Debug\Cliente.pdb

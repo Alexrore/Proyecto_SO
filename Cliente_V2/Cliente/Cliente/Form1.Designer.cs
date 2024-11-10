@@ -85,7 +85,7 @@
             this.Conectrase.TabIndex = 4;
             this.Conectrase.Text = "Conectarse";
             this.Conectrase.UseVisualStyleBackColor = true;
-            this.Conectrase.Click += new System.EventHandler(this.Conectrase_Click);
+            this.Conectrase.Click += new System.EventHandler(this.Conectarse_Click);
             // 
             // Desconectarse
             // 

@@ -20,6 +20,7 @@ namespace InicioPartida
         Random rand = new Random();
         int cont = 0;
         int turno = 0;
+        Socket clienteSocket;
         public Form2()
         {
             InitializeComponent();
@@ -30,94 +31,76 @@ namespace InicioPartida
             Tablero.BackgroundImageLayout = ImageLayout.Stretch;
             labelnumero.Text = "?";
             Tablero.Visible = true;
+
+        }
+
+        private void ConnectToServer()
+        {
+            // Crear un socket para conectarse al servidor
+            clienteSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            clienteSocket.Connect("127.0.0.1", 9050);  // Dirección y puerto del servidor
+
+            // Iniciar un hilo para recibir datos
+            Task.Run(() => ReceiveData());
         }
 
 
 
-        private void CargarJugadoresConectados()
+        private void ReceiveData()
         {
-            // Supongamos que tienes un socket conectado al servidor
-            Socket clienteSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp); // Este socket debe estar correctamente inicializado y conectado.
-
-            // Buffer para recibir datos
             byte[] buffer = new byte[1024];
 
-            try
+            while (true)
             {
-                // Recibir la cantidad de jugadores conectados
-                int bytesRecibidos = clienteSocket.Receive(buffer, sizeof(int), SocketFlags.None);
-
-                if (bytesRecibidos == sizeof(int)) // Asegúrate de que se recibieron los bytes esperados
+                try
                 {
-                    int jugadoresConectadosCount = BitConverter.ToInt32(buffer, 0);
-
-                    // Limpiar el DataGridView antes de añadir los datos
-                    conectadosGrid.Rows.Clear();
-
-                    // Configurar el DataGridView con una columna para los jugadores conectados
-                    conectadosGrid.ColumnCount = 1;
-                    conectadosGrid.Columns[0].Name = "Jugadores Conectados";
-
-                    // Verifica que haya jugadores conectados antes de añadir filas
-                    if (jugadoresConectadosCount > 0)
+                    int bytesReceived = clienteSocket.Receive(buffer);
+                    if (bytesReceived > 0)
                     {
-                        // Establecer el RowCount antes de añadir datos
-                        conectadosGrid.RowCount = jugadoresConectadosCount;
+                        string data = Encoding.UTF8.GetString(buffer, 0, bytesReceived);
 
-                        // Recibir los nombres de los jugadores y añadirlos al DataGridView
-                        for (int i = 0; i < jugadoresConectadosCount; i++)
+                        // Si el servidor envía la lista de jugadores
+                        if (data.StartsWith("Jugadores en linea:"))
                         {
-                            // Recibir el tamaño del nombre del jugador
-                            int nombreLength = clienteSocket.Receive(buffer);
+                            // Limpiar la lista de jugadores conectados
+                            conectados.Clear();
 
-                            // Asegúrate de que se recibieron los bytes esperados
-                            if (nombreLength > 0)
-                            {
-                                // Recibir el nombre del jugador
-                                string nombreJugador = Encoding.UTF8.GetString(buffer, 0, nombreLength);
+                            // Obtener los nombres de los jugadores
+                            string[] jugadores = data.Substring("Jugadores en linea:".Length).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            conectados.AddRange(jugadores);
 
-                                // Añadir el nombre del jugador al DataGridView en la fila correspondiente
-                                conectadosGrid.Rows[i].Cells[0].Value = nombreJugador; // Añadir directamente a la celda
-                            }
+                            // Actualizar la interfaz de usuario
+                            Invoke(new Action(UpdateConectadosGrid));
                         }
                     }
-                    else
-                    {
-                        // Si no hay jugadores, limpia el DataGridView y muestra un mensaje
-                        conectadosGrid.Rows.Clear();
-                        MessageBox.Show("No hay jugadores conectados.");
-                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("Error al recibir la cantidad de jugadores conectados.");
+                    MessageBox.Show($"Error al recibir datos: {ex.Message}");
+                    break;
                 }
-            }
-            catch (SocketException ex)
-            {
-                MessageBox.Show($"Error de socket: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error: {ex.Message}");
             }
         }
 
+        private void UpdateConectadosGrid()
+        {
+            // Limpiar el DataGridView
+            conectadosGrid.Rows.Clear();
 
-
-
+            // Agregar los jugadores conectados al DataGridView
+            foreach (var jugador in conectados)
+            {
+                conectadosGrid.Rows.Add(jugador);
+            }
+        }
 
         private void listaconectados_Click(object sender, EventArgs e)
         {
-            conectadosGrid.ColumnCount = 1;
-            conectadosGrid.RowCount = conectados.Count;
-            for (int i = 0; i < conectados.Count; i++)
-                conectadosGrid.Rows[i].Cells[0].Value = conectados[i];
-        }
-
-        private void conectadosGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
+            // Mostrar la lista de jugadores conectados al hacer clic en el botón
+            UpdateConectadosGrid();
         }
     }
 }
+
+
+
