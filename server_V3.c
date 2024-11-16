@@ -82,6 +82,8 @@ void *AtenderCliente(void *socket) {
     char nombre[MAX_NOMBRE];
 
     while (terminar == 0) {
+		Give_Me_Onlines(Clis, clientes);
+		write(sock_conn, clientes, strlen(clientes));
         ret = read(sock_conn, peticion, sizeof(peticion));
         peticion[ret] = '\0';
         printf("Peticion: %s\n", peticion);
@@ -105,17 +107,18 @@ void *AtenderCliente(void *socket) {
                         strcpy(jugadores_conectados[j], jugadores_conectados[j + 1]);
                     }
 					Clis.numero_clientes--;
+					Give_Me_Onlines(Clis, clientes);
                     break;
                 }
             }
             pthread_mutex_unlock(&mutex);
 			
 			
-			
+		}
             // Actualizar lista a todos los jugadores conectados
-            Give_Me_Onlines(Clis, clientes);
+            
 
-        } else if (codigo == 1) { // Registrar
+		if (codigo == 1) { // Registrar
             
             p = strtok(NULL, "/");
             strcpy(password, p);
@@ -182,7 +185,7 @@ void *AtenderCliente(void *socket) {
                     pthread_mutex_unlock(&mutex);
 
                     // Actualizar lista a todos los jugadores conectados
-                    Give_Me_Onlines(Clis, clientes);
+                    //Give_Me_Onlines(Clis, clientes);
                 } else {
                     printf("Usuario o contraseña incorrectos\n");
                     sprintf(respuesta, "Usuario o contraseña incorrectos");
@@ -192,9 +195,6 @@ void *AtenderCliente(void *socket) {
             write(sock_conn, respuesta, strlen(respuesta));
 		}
 
-		else if (codigo == 6) { // Solicitar lista de jugadores conectados
-            Give_Me_Onlines(Clis, clientes);
-		}
 
         else if (codigo == 3) { // Consulta Nombre
             char query[512];
@@ -297,14 +297,15 @@ void Give_Me_nombre(Cliente_Lista Clis,int id, char Name[20])
 }
 void Give_Me_Onlines(Cliente_Lista Clis, char conectados[300]) {
 	char nombre[20];
-	
+	conectados[0] = '\0';
+	strcat( conectados, "Jugadores en linea:");
 		for (int i = 0; i < Clis.numero_clientes; i++) {
 			Give_Me_nombre(Clis, i+1, nombre);
 			strcat(conectados, " ");
 			strcat(conectados, nombre);
-			printf("%s\n", conectados);
+			
 	}
-		// Para depuracion
+		printf("%s\n", conectados);
 }
 
 int main() {
