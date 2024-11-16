@@ -56,14 +56,17 @@ namespace InicioPartida
         private void ReceiveData()
         {
             byte[] buffer = new byte[1024];
-
+            string mensaje = "6/";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            clienteSocket.Send(msg);
             while (true)
             {
                 try
                 {
+
                     byte[] msg2 = new byte[1024];
                     clienteSocket.Receive(msg2);
-                    string mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                    mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
                     if (!string.IsNullOrWhiteSpace(mensaje))
                     {
 

@@ -122,7 +122,7 @@ namespace Cliente
         private void IniciarPartida_Click(object sender, EventArgs e)
         {
             Form2 f2 = new Form2();
-            f2.ShowDialog();
+            f2.ShowDialog();                     
         }
 
         private void Consulta_Click(object sender, EventArgs e)

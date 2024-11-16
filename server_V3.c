@@ -34,12 +34,13 @@ pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 char jugadores_conectados[MAX_JUGADORES][MAX_NOMBRE];
 int clientes_conectados[MAX_CLIENTES];
 int Socket[100];
-char clientes[300];
+char clientes[1024];
 Cliente_Lista Clis;
 char peticion[512];
 char respuesta[512];
 char query[512];
 char password[20];
+
 
 
 
@@ -70,7 +71,7 @@ void agregarCliente(int sock_cliente) {
 }
 
 void *AtenderCliente(void *socket) {
-    int sock_conn = *(int *)socket;
+	int sock_conn = *(int *)socket;
     free(socket);
     
     
@@ -82,15 +83,14 @@ void *AtenderCliente(void *socket) {
     char nombre[MAX_NOMBRE];
 
     while (terminar == 0) {
-		Give_Me_Onlines(Clis, clientes);
-		write(sock_conn, clientes, strlen(clientes));
+		
         ret = read(sock_conn, peticion, sizeof(peticion));
         peticion[ret] = '\0';
         printf("Peticion: %s\n", peticion);
 
         char *p = strtok(peticion, "/");
         int codigo = atoi(p);
-        if (codigo != 0) {
+        if (codigo != 0 && codigo !=6) {
             p = strtok(NULL, "/");
             strcpy(nombre, p);
             printf("Codigo: %d, Nombre: %s\n", codigo, nombre);
@@ -108,6 +108,7 @@ void *AtenderCliente(void *socket) {
                     }
 					Clis.numero_clientes--;
 					Give_Me_Onlines(Clis, clientes);
+					write(sock_conn, clientes, strlen(clientes));
                     break;
                 }
             }
@@ -155,8 +156,6 @@ void *AtenderCliente(void *socket) {
                     strcpy(jugadores_conectados[Clis.numero_clientes], nombre);
 					Clis.numero_clientes++;
                     pthread_mutex_unlock(&mutex);
-
-                    // Actualizar lista a todos los jugadores conectados
                    
                 }
             }
@@ -167,7 +166,9 @@ void *AtenderCliente(void *socket) {
             char password[20];
             p = strtok(NULL, "/");
             strcpy(password, p);
-
+			respuesta[0] = '\0';
+			
+			
             sprintf(query, "SELECT * FROM Jugador WHERE Nombre='%s' AND contraseña='%s'", nombre, password);
             if (mysql_query(conn, query)) {
                 printf("Error en la consulta: %s\n", mysql_error(conn));
@@ -176,23 +177,25 @@ void *AtenderCliente(void *socket) {
                 MYSQL_RES *res = mysql_store_result(conn);
                 if (mysql_num_rows(res) > 0) {
                     printf("Inicio de sesion exitoso\n");
-                    sprintf(respuesta, "Inicio de sesion exitoso");
+                    strcpy(respuesta, "Inicio de sesion exitoso");
+					write(sock_conn, respuesta, strlen(respuesta));
+					
 
-                    // AÃ±adir a la lista de conectados
+                    // Añadir a la lista de conectados
                     pthread_mutex_lock(&mutex);
                     strcpy(jugadores_conectados[Clis.numero_clientes], nombre);
 					Clis.numero_clientes++;
+					EnviarListaConectados(sock_conn, Clis.numero_clientes);
                     pthread_mutex_unlock(&mutex);
-
-                    // Actualizar lista a todos los jugadores conectados
-                    //Give_Me_Onlines(Clis, clientes);
+				
                 } else {
                     printf("Usuario o contraseña incorrectos\n");
                     sprintf(respuesta, "Usuario o contraseña incorrectos");
                 }
                 mysql_free_result(res);
             }
-            write(sock_conn, respuesta, strlen(respuesta));
+
+
 		}
 
 
@@ -268,7 +271,13 @@ void *AtenderCliente(void *socket) {
                 mysql_free_result(res);
             }
             write(sock_conn, respuesta, strlen(respuesta));
-        }
+        } else if (codigo == 6)
+		{
+			
+			Give_Me_Onlines(Clis, clientes);
+			write(sock_conn, clientes, strlen(clientes));
+			
+		}
 
        
     }
@@ -295,7 +304,7 @@ void Give_Me_nombre(Cliente_Lista Clis,int id, char Name[20])
 		mysql_free_result(res);
 	}
 }
-void Give_Me_Onlines(Cliente_Lista Clis, char conectados[300]) {
+void Give_Me_Onlines(Cliente_Lista Clis, char conectados[1024]) {
 	char nombre[20];
 	conectados[0] = '\0';
 	strcat( conectados, "Jugadores en linea:");
@@ -307,6 +316,35 @@ void Give_Me_Onlines(Cliente_Lista Clis, char conectados[300]) {
 	}
 		printf("%s\n", conectados);
 }
+void EnviarListaConectados(int *sockets, int num_clientes) {
+  //  pthread_mutex_lock(&mutex); // Proteger la lista de clientes
+
+    // Generar la lista de jugadores conectados
+    Give_Me_Onlines(Clis, clientes);
+
+    // Enviar a todos los clientes conectados
+    for (int i = 0; i < num_clientes; i++) {
+        if (clientes_conectados[i] != -1) { // Verifica que el socket sea válido
+            if (write(sockets, clientes, strlen(clientes)) == -1) {
+                printf("Error enviando a socket: %d\n", clientes_conectados[i]);
+                close(clientes_conectados[i]); // Cierra el socket si falla
+                clientes_conectados[i] = -1;  // Marca el socket como inactivo
+            }
+        }
+    }
+
+    // Limpiar sockets inactivos de la lista
+    int j = 0;
+    for (int i = 0; i < num_clientes; i++) {
+        if (clientes_conectados[i] != -1) {
+            clientes_conectados[j++] = clientes_conectados[i];
+        }
+    }
+    Clis.numero_clientes = j; // Actualiza el número de clientes activos
+
+    //pthread_mutex_unlock(&mutex);
+}
+
 
 int main() {
     int sock_listen, sock_conn;
