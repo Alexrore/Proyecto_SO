@@ -24,6 +24,7 @@ namespace InicioPartida
         public Form2()
         {
             InitializeComponent();
+            ConnectToServer();
         }
 
         private void f2_Load(object sender, EventArgs e)
@@ -36,13 +37,19 @@ namespace InicioPartida
 
         private void ConnectToServer()
         {
-            // Crear un socket para conectarse al servidor
-            clienteSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            clienteSocket.Connect("127.0.0.1", 9050);  // Dirección y puerto del servidor
-
-            // Iniciar un hilo para recibir datos
-            Task.Run(() => ReceiveData());
+            try
+            {
+                clienteSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                clienteSocket.Connect("192.168.0.19", 9050);  // Dirección y puerto del servidor
+                Task.Run(() => ReceiveData());
+            }
+            catch (SocketException ex)
+            {
+                MessageBox.Show($"Error al conectar con el servidor: {ex.Message}");
+                clienteSocket = null;  // Asegúrate de que clienteSocket quede como null si no se conecta
+            }
         }
+
 
 
 
@@ -54,19 +61,20 @@ namespace InicioPartida
             {
                 try
                 {
-                    int bytesReceived = clienteSocket.Receive(buffer);
-                    if (bytesReceived > 0)
+                    byte[] msg2 = new byte[1024];
+                    clienteSocket.Receive(msg2);
+                    string mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
+                    if (!string.IsNullOrWhiteSpace(mensaje))
                     {
-                        string data = Encoding.UTF8.GetString(buffer, 0, bytesReceived);
 
                         // Si el servidor envía la lista de jugadores
-                        if (data.StartsWith("Jugadores en linea:"))
+                        if (mensaje.StartsWith("Jugadores en linea:"))
                         {
                             // Limpiar la lista de jugadores conectados
                             conectados.Clear();
 
                             // Obtener los nombres de los jugadores
-                            string[] jugadores = data.Substring("Jugadores en linea:".Length).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            string[] jugadores = mensaje.Substring("Jugadores en linea:".Length).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             conectados.AddRange(jugadores);
 
                             // Actualizar la interfaz de usuario
@@ -94,11 +102,6 @@ namespace InicioPartida
             }
         }
 
-        private void listaconectados_Click(object sender, EventArgs e)
-        {
-            // Mostrar la lista de jugadores conectados al hacer clic en el botón
-            UpdateConectadosGrid();
-        }
     }
 }
 
