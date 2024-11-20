@@ -43,6 +43,10 @@
             this.Victorias = new System.Windows.Forms.RadioButton();
             this.Medallas = new System.Windows.Forms.RadioButton();
             this.Consulta = new System.Windows.Forms.Button();
+            this.conectadosGrid = new System.Windows.Forms.DataGridView();
+            this.Jugadores = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ListaJugadores = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.conectadosGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // textBox_nombre
@@ -135,7 +139,6 @@
             this.label3.Size = new System.Drawing.Size(23, 16);
             this.label3.TabIndex = 9;
             this.label3.Text = "ID:";
-            this.label3.Visible = false;
             // 
             // textBox_Consulta
             // 
@@ -143,7 +146,6 @@
             this.textBox_Consulta.Name = "textBox_Consulta";
             this.textBox_Consulta.Size = new System.Drawing.Size(159, 22);
             this.textBox_Consulta.TabIndex = 10;
-            this.textBox_Consulta.Visible = false;
             // 
             // Nombre
             // 
@@ -155,7 +157,6 @@
             this.Nombre.TabStop = true;
             this.Nombre.Text = "Dime el nombre";
             this.Nombre.UseVisualStyleBackColor = true;
-            this.Nombre.Visible = false;
             // 
             // Victorias
             // 
@@ -167,7 +168,6 @@
             this.Victorias.TabStop = true;
             this.Victorias.Text = "Dime el numero de partidas ganadas";
             this.Victorias.UseVisualStyleBackColor = true;
-            this.Victorias.Visible = false;
             // 
             // Medallas
             // 
@@ -179,7 +179,6 @@
             this.Medallas.TabStop = true;
             this.Medallas.Text = "Dime el numero de medallas obtenidas";
             this.Medallas.UseVisualStyleBackColor = true;
-            this.Medallas.Visible = false;
             // 
             // Consulta
             // 
@@ -189,14 +188,44 @@
             this.Consulta.TabIndex = 14;
             this.Consulta.Text = "Consulta";
             this.Consulta.UseVisualStyleBackColor = true;
-            this.Consulta.Visible = false;
             this.Consulta.Click += new System.EventHandler(this.Consulta_Click);
+            // 
+            // conectadosGrid
+            // 
+            this.conectadosGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.conectadosGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Jugadores});
+            this.conectadosGrid.Location = new System.Drawing.Point(12, 94);
+            this.conectadosGrid.Name = "conectadosGrid";
+            this.conectadosGrid.RowHeadersWidth = 51;
+            this.conectadosGrid.RowTemplate.Height = 24;
+            this.conectadosGrid.Size = new System.Drawing.Size(178, 220);
+            this.conectadosGrid.TabIndex = 15;
+            // 
+            // Jugadores
+            // 
+            this.Jugadores.HeaderText = "Jugadores";
+            this.Jugadores.MinimumWidth = 6;
+            this.Jugadores.Name = "Jugadores";
+            this.Jugadores.Width = 125;
+            // 
+            // ListaJugadores
+            // 
+            this.ListaJugadores.Location = new System.Drawing.Point(12, 62);
+            this.ListaJugadores.Name = "ListaJugadores";
+            this.ListaJugadores.Size = new System.Drawing.Size(119, 36);
+            this.ListaJugadores.TabIndex = 16;
+            this.ListaJugadores.Text = "Ver Lista";
+            this.ListaJugadores.UseVisualStyleBackColor = true;
+            this.ListaJugadores.Click += new System.EventHandler(this.ListaJugadores_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(871, 525);
+            this.Controls.Add(this.ListaJugadores);
+            this.Controls.Add(this.conectadosGrid);
             this.Controls.Add(this.Consulta);
             this.Controls.Add(this.Medallas);
             this.Controls.Add(this.Victorias);
@@ -214,6 +243,7 @@
             this.Controls.Add(this.textBox_nombre);
             this.Name = "Form1";
             this.Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)(this.conectadosGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,6 +266,9 @@
         private System.Windows.Forms.RadioButton Victorias;
         private System.Windows.Forms.RadioButton Medallas;
         private System.Windows.Forms.Button Consulta;
+        private System.Windows.Forms.DataGridView conectadosGrid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Jugadores;
+        private System.Windows.Forms.Button ListaJugadores;
     }
 }
 

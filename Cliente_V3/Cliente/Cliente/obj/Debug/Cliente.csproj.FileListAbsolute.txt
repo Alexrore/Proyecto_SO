@@ -67,3 +67,17 @@ C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\C
 C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.csproj.Up2Date
 C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.exe
 C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.pdb
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\bin\Debug\Cliente.exe.config
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\bin\Debug\Cliente.exe
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\bin\Debug\Cliente.pdb
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\bin\Debug\InicioPartida.exe
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\bin\Debug\InicioPartida.pdb
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\bin\Debug\InicioPartida.exe.config
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.csproj.AssemblyReference.cache
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.Form1.resources
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.Properties.Resources.resources
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.csproj.GenerateResource.cache
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.csproj.CoreCompileInputs.cache
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.csproj.CopyComplete
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.exe
+C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\Cliente\obj\Debug\Cliente.pdb

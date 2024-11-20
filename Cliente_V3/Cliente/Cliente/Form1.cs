@@ -5,9 +5,10 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using InicioPartida;
 
@@ -17,23 +18,82 @@ namespace Cliente
     {
 
         Socket server;
+        Thread atender;
+        bool conexion;
+        List<string> conectados = new List<string>();
         public Form1()
         {
             InitializeComponent();
         }
 
+        private void AtenderServidor()
+        {
+            while (conexion)
+            {
+                byte[] msg = new byte[80];
+                server.Receive(msg);
+                string[] trozos = Encoding.ASCII.GetString(msg).Split('/');
+                int codigo = Convert.ToInt32(trozos[0]);
+                string mensaje = trozos[1].Split('\0')[0];
+
+                switch (codigo)
+                {
+                    case 1: //registro
+                        MessageBox.Show(mensaje);
+                        break;
+                    case 2: //inicio de sesion
+                        MessageBox.Show(mensaje);
+                        break;
+                    case 3: //consulta
+                        MessageBox.Show(mensaje);
+                        break;
+                    case 4: //consulta
+                        MessageBox.Show(mensaje);
+                        break;
+                    case 5: //consulta
+                        MessageBox.Show(mensaje);
+                        break; 
+                    case 6: //actualizacion conectados
+                        conectados.Clear();
+
+                        // Obtener los nombres de los jugadores
+                        string[] jugadores = mensaje.Substring("Jugadores en linea:".Length).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        conectados.AddRange(jugadores);
+                        conectadosGrid.Rows.Clear();
+                        foreach (var jugador in conectados)
+                        {
+                            conectadosGrid.Rows.Add(jugador);
+                        }
+                        break;
+                }
+            }
+        }
         private void Conectarse_Click(object sender, EventArgs e)
         {
-            IPAddress direc = IPAddress.Parse("192.168.0.19");
+            //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
+            //al que deseamos conectarnos
+            IPAddress direc = IPAddress.Parse("192.168.56.102");
             IPEndPoint ipep = new IPEndPoint(direc, 9050);
+
+
+            //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             try
             {
-                server.Connect(ipep);
+                server.Connect(ipep);//Intentamos conectar el socket
                 this.BackColor = Color.Green;
+                MessageBox.Show("Conectado");
+                //pongo en marcha el thread que atenderá los mensajes del servidor
+                ThreadStart ts = delegate { AtenderServidor(); };
+                atender = new Thread(ts);
+                atender.Start();
+
             }
             catch (SocketException ex)
-            { this.BackColor = Color.Red;
+            {
+                //Si hay excepcion imprimimos error y salimos del programa con return 
+                this.BackColor = Color.Red;
+                MessageBox.Show("No he podido conectar con el servidor");
                 return;
             }
         }
@@ -43,21 +103,10 @@ namespace Cliente
             try
             {
                 string mensaje = "0/";
-
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-
-                // Nos desconectamos
+                conexion = false;
                 this.BackColor = Color.White;
-                server.Shutdown(SocketShutdown.Both);
-
-                server.Close();
-                Consulta.Visible = false;
-                label3.Visible = false;
-                textBox_Consulta.Visible = false;
-                Medallas.Visible = false;
-                Nombre.Visible = false;
-                Victorias.Visible = false;
             }
             catch(Exception ex)
             {
@@ -77,25 +126,10 @@ namespace Cliente
                 MessageBox.Show("Por favor, ingresa un nombre de usuario y una contraseña.");
                 return;
             }
-            string mensaje = "2/"+usuario+"/"+pswd;
+            string mensaje = "2/" + usuario + "/" + pswd;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
-
-            //Recibimos la respuesta del servidor
-            byte[] msg2 = new byte[80];
-            server.Receive(msg2);
-            mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-            MessageBox.Show(mensaje);
-            if (mensaje == "Inicio de sesion exitoso")
-            {
-                Consulta.Visible = true;
-                label3.Visible = true;
-                textBox_Consulta.Visible = true;
-                Medallas.Visible = true;
-                Nombre.Visible = true;
-                Victorias.Visible = true;
-            }
-        }
+        }    
 
         private void Registrarse_Click(object sender, EventArgs e)
         {
@@ -111,18 +145,12 @@ namespace Cliente
             string mensaje = "1/" + usuario + "/" + pswd;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
-
-            //Recibimos la respuesta del servidor
-            byte[] msg2 = new byte[80];
-            server.Receive(msg2);
-            mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-            MessageBox.Show(mensaje);
         }
 
         private void IniciarPartida_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2();
-            f2.ShowDialog();                     
+            Form2 f2 = new Form2(server);
+            f2.ShowDialog();
         }
 
         private void Consulta_Click(object sender, EventArgs e)
@@ -153,13 +181,13 @@ namespace Cliente
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
             }
+        }
 
-
-            //Recibimos la respuesta del servidor
-            byte[] msg2 = new byte[80];
-            server.Receive(msg2);
-            mensaje = Encoding.ASCII.GetString(msg2).Split('\0')[0];
-            MessageBox.Show(mensaje);
+        private void ListaJugadores_Click(object sender, EventArgs e)
+        {
+            string mensaje = "6/";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
         }
     }
 }
