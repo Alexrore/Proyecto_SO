@@ -19,7 +19,6 @@ namespace Cliente
 
         Socket server;
         Thread atender;
-        bool conexion;
         List<string> conectados = new List<string>();
         public Form1()
         {
@@ -28,7 +27,7 @@ namespace Cliente
 
         private void AtenderServidor()
         {
-            while (conexion)
+            while (true)
             {
                 byte[] msg = new byte[80];
                 server.Receive(msg);
@@ -38,6 +37,9 @@ namespace Cliente
 
                 switch (codigo)
                 {
+                    case 7:
+                        MessageBox.Show(mensaje);
+                        break;
                     case 1: //registro
                         MessageBox.Show(mensaje);
                         break;
@@ -57,13 +59,9 @@ namespace Cliente
                         conectados.Clear();
 
                         // Obtener los nombres de los jugadores
-                        string[] jugadores = mensaje.Substring("Jugadores en linea:".Length).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] jugadores = mensaje.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         conectados.AddRange(jugadores);
-                        conectadosGrid.Rows.Clear();
-                        foreach (var jugador in conectados)
-                        {
-                            conectadosGrid.Rows.Add(jugador);
-                        }
+                        Invoke(new Action(UpdateConectadosGrid));
                         break;
                 }
             }
@@ -105,13 +103,16 @@ namespace Cliente
                 string mensaje = "0/";
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
-                conexion = false;
                 this.BackColor = Color.White;
             }
             catch(Exception ex)
             {
                 MessageBox.Show("No hay ningun servidor conectado.");
             }
+            atender.Abort();
+            this.BackColor = Color.Gray;
+            server.Shutdown(SocketShutdown.Both);
+            server.Close();
 
         }
 
@@ -188,6 +189,32 @@ namespace Cliente
             string mensaje = "6/";
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
+        }
+        private void UpdateConectadosGrid()
+        {
+            // Limpiar el DataGridView
+            conectadosGrid.Rows.Clear();
+
+            // Agregar los jugadores conectados al DataGridView
+            foreach (var jugador in conectados)
+            {
+                conectadosGrid.Rows.Add(jugador);
+            }
+        }
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //Mensaje de desconexión
+            string mensaje = "0/";
+
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+
+            // Nos desconectamos
+            atender.Abort();
+            this.BackColor = Color.Gray;
+            server.Shutdown(SocketShutdown.Both);
+            server.Close();
+
         }
     }
 }
