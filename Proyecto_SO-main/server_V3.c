@@ -52,7 +52,7 @@ void actualizar_onlines(int sock_cliente, int codigo, char nom[MAX_NOMBRE])
 {
 	if (codigo == 1)
 	{
-		if (Clis.numero_clientes < MAX_CLIENTES) // Añadir cliente
+		if (Clis.numero_clientes < MAX_CLIENTES) 
 		{
 			Clis.numero_clientes++;
 			Clis.cliente[Clis.numero_clientes - 1].sock = sock_cliente;
@@ -64,25 +64,13 @@ void actualizar_onlines(int sock_cliente, int codigo, char nom[MAX_NOMBRE])
 		}
 	}
 	
-	if (codigo == 2) // Desconectar cliente	
+	if (codigo == 2)
 	{	
 		if(Clis.numero_clientes > 0)
 		{
-
-			for (int u = 0; u < Clis.numero_clientes; u++)
-			{
-				if (strcmp(Clis.cliente[u].Nombre, nom) == 0)
-				{
-					int cont = u;
-					while (cont < Clis.numero_clientes)
-					{
-						Clis.cliente[cont].sock = Clis.cliente[cont+1].sock;
-						strcpy(Clis.cliente[cont].Nombre, Clis.cliente[cont+1].Nombre);
-						cont++;
-					}
-					Clis.numero_clientes--;
-				}
-			}
+			Clis.numero_clientes--;
+			Clis.cliente[Clis.numero_clientes].sock = NULL;
+			strcpy(Clis.cliente[Clis.numero_clientes].Nombre, "");
 		}		
 	}
 	
@@ -95,9 +83,8 @@ void actualizar_onlines(int sock_cliente, int codigo, char nom[MAX_NOMBRE])
 	}
 	if (codigo==1 || codigo==2)
 	{
-		printf("Lista de conectados:%s\n", clientes);
-		for (int i = 0; i < Clis.numero_clientes; i++) 
-		{
+		printf("%s \n", clientes);
+		for (int i = 0; i < Clis.numero_clientes; i++) {
 			if (Clis.cliente[i].sock != sock_cliente)
 			{
 				write(Clis.cliente[i].sock, clientes, strlen(clientes));
@@ -106,7 +93,6 @@ void actualizar_onlines(int sock_cliente, int codigo, char nom[MAX_NOMBRE])
 	}
 	if (codigo==0)
 	{
-		printf("%s\n", clientes);
 		write(sock_cliente, clientes,strlen(clientes));
 	}
 }
@@ -139,12 +125,12 @@ void *AtenderCliente(void *socket)
             strcpy(nombre, p);
             printf("Codigo: %d, Nombre: %s\n", codigo, nombre);
         }
-		
+
         if (codigo == 0) // Desconexion
 		{ 
 			actualizar_onlines(sock_conn, 2, nombre);
-			printf("%s desconctado \n", nombre);
-			sprintf(respuesta, "7/Desconexion exitosa");
+			printf("%s desconctado", nombre);
+			sprintf(respuesta, "0/");
 			write(sock_conn, respuesta, strlen(respuesta));
             terminar = 1;
 		}
@@ -334,6 +320,7 @@ int main()
     int sock_listen, sock_conn;
     struct sockaddr_in serv_addr;
     pthread_t thread;
+	Clis.numero_clientes = 0;
 
     conectarBD();  // Conectar a la base de datos
 
