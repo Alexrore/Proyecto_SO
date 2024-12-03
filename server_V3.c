@@ -87,7 +87,7 @@ void actualizar_onlines(int sock_cliente, int codigo, char nom[MAX_NOMBRE])
 	}
 	
 	char clientes[1024];
-	strcpy(clientes, "6/");
+	strcpy(clientes, "2/");
 	for (int j = 0; j < Clis.numero_clientes; j++)
 	{
 		strcat (clientes, Clis.cliente[j].Nombre);
@@ -98,10 +98,7 @@ void actualizar_onlines(int sock_cliente, int codigo, char nom[MAX_NOMBRE])
 		printf("Lista de conectados:%s\n", clientes);
 		for (int i = 0; i < Clis.numero_clientes; i++) 
 		{
-			if (Clis.cliente[i].sock != sock_cliente)
-			{
-				write(Clis.cliente[i].sock, clientes, strlen(clientes));
-			}
+			write(Clis.cliente[i].sock, clientes, strlen(clientes));
 		}
 	}
 	if (codigo==0)
@@ -142,11 +139,11 @@ void *AtenderCliente(void *socket)
 		
         if (codigo == 0) // Desconexion
 		{ 
-			actualizar_onlines(sock_conn, 2, nombre);
 			printf("%s desconctado \n", nombre);
-			sprintf(respuesta, "7/Desconexion exitosa");
-			write(sock_conn, respuesta, strlen(respuesta));
-            terminar = 1;
+			terminar = 1;
+			pthread_mutex_lock(&mutex);
+			actualizar_onlines(sock_conn, 2, nombre);
+			pthread_mutex_unlock(&mutex);
 		}
 		
 		if (codigo == 1) // Registrar
@@ -205,7 +202,6 @@ void *AtenderCliente(void *socket)
             if (mysql_query(conn, query)) 
 			{
                 printf("Error en la consulta: %s\n", mysql_error(conn));
-                sprintf(respuesta, "2/Error en el inicio de sesion");
             } 
 			
 			else 
@@ -214,17 +210,15 @@ void *AtenderCliente(void *socket)
                 if (mysql_num_rows(res) > 0) 
 				{
                     printf("Inicio de sesion exitoso\n");
-                    strcpy(respuesta, "2/Inicio de sesion exitoso");
 					actualizar_onlines(sock_conn, 1, nombre);
                 } 
 				else 
 				{
                     printf("Usuario o contraseña incorrectos\n");
-                    sprintf(respuesta, "2/Usuario o contraseña incorrectos");
                 }
                 mysql_free_result(res);
             }
-			write(sock_conn, respuesta, strlen(respuesta));
+			
 		}
 
 
@@ -320,10 +314,6 @@ void *AtenderCliente(void *socket)
             }
             write(sock_conn, respuesta, strlen(respuesta));
         } 
-		else if (codigo == 6)
-		{
-			actualizar_onlines(sock_conn, 0, nombre);	
-		}
     }
     close(sock_conn);
     return NULL;

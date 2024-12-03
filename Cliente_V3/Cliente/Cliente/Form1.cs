@@ -23,8 +23,19 @@ namespace Cliente
         public Form1()
         {
             InitializeComponent();
+            Desconectarse.Visible = false;
+            IniciarPartida.Visible = false;
+            label_ID.Visible = false;
+            textBox_Consulta.Visible = false;
+            Nombre.Visible = false;
+            Victorias.Visible = false;
+            Medallas.Visible = false;
+            Consulta.Visible = false;
+            label_invitar.Visible = false;
+            comboBox1.Visible = false;
+            Invitar.Visible = false;
         }
-
+        private string usuario;
         private void AtenderServidor()
         {
             while (true)
@@ -44,7 +55,12 @@ namespace Cliente
                         MessageBox.Show(mensaje);
                         break;
                     case 2: //inicio de sesion
-                        MessageBox.Show(mensaje);
+                        conectados.Clear();
+
+                        // Obtener los nombres de los jugadores
+                        string[] jugadores = mensaje.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        conectados.AddRange(jugadores);
+                        Invoke(new Action(UpdateConectadosGrid));
                         break;
                     case 3: //consulta
                         MessageBox.Show(mensaje);
@@ -55,14 +71,14 @@ namespace Cliente
                     case 5: //consulta
                         MessageBox.Show(mensaje);
                         break; 
-                    case 6: //actualizacion conectados
+                   /* case 6: //actualizacion conectados
                         conectados.Clear();
 
                         // Obtener los nombres de los jugadores
                         string[] jugadores = mensaje.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         conectados.AddRange(jugadores);
                         Invoke(new Action(UpdateConectadosGrid));
-                        break;
+                        break;*/
                 }
             }
         }
@@ -70,7 +86,7 @@ namespace Cliente
         {
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
-            IPAddress direc = IPAddress.Parse("192.168.56.102");
+            IPAddress direc = IPAddress.Parse("192.168.0.19");
             IPEndPoint ipep = new IPEndPoint(direc, 9050);
 
 
@@ -80,11 +96,12 @@ namespace Cliente
             {
                 server.Connect(ipep);//Intentamos conectar el socket
                 this.BackColor = Color.Green;
-                MessageBox.Show("Conectado");
                 //pongo en marcha el thread que atenderá los mensajes del servidor
                 ThreadStart ts = delegate { AtenderServidor(); };
                 atender = new Thread(ts);
                 atender.Start();
+                Conectrase.Visible =false;
+                Desconectarse.Visible =true;
 
             }
             catch (SocketException ex)
@@ -103,22 +120,40 @@ namespace Cliente
                 string mensaje = "0/";
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
+                server.Shutdown(SocketShutdown.Both);
+                server.Close();
+                atender.Abort();
+                conectados.Clear();
+                conectadosGrid.Rows.Clear();
                 this.BackColor = Color.White;
+                Conectrase.Visible=true;
+                Desconectarse.Visible=false;
+                Iniciar_sesion.Visible=true;
+                Registrarse.Visible=true;
+                IniciarPartida.Visible = false;
+                label_ID.Visible = false;
+                textBox_Consulta.Visible = false;
+                Nombre.Visible = false;
+                Victorias.Visible = false;
+                Medallas.Visible = false;
+                Consulta.Visible = false;
+                label_contraseña.Visible = true;
+                textBox_Contraseña.Visible = true;
+                label_invitar.Visible = false;
+                comboBox1.Visible = false;
+                Invitar.Visible = false;
+
+
             }
             catch(Exception ex)
             {
                 MessageBox.Show("No hay ningun servidor conectado.");
-            }
-            atender.Abort();
-            this.BackColor = Color.Gray;
-            server.Shutdown(SocketShutdown.Both);
-            server.Close();
-
+            }          
         }
 
         private void Iniciar_sesion_Click(object sender, EventArgs e)
         {
-            string usuario = textBox_nombre.Text;
+            usuario = textBox_nombre.Text;
             string pswd = textBox_Contraseña.Text;
 
             // Enviamos al servidor el nombre tecleado
@@ -130,6 +165,20 @@ namespace Cliente
             string mensaje = "2/" + usuario + "/" + pswd;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
+            Iniciar_sesion.Visible=false;
+            Registrarse.Visible=false;
+            label_contraseña.Visible=false;
+            textBox_Contraseña.Visible = false;
+            IniciarPartida.Visible = true;
+            label_ID.Visible = true;
+            textBox_Consulta.Visible = true;
+            Nombre.Visible = true;
+            Victorias.Visible = true;
+            Medallas.Visible = true;
+            Consulta.Visible = true;
+            label_invitar.Visible = true;
+            comboBox1.Visible = true;
+            Invitar.Visible = true;
         }    
 
         private void Registrarse_Click(object sender, EventArgs e)
@@ -183,38 +232,50 @@ namespace Cliente
                 server.Send(msg);
             }
         }
-
-        private void ListaJugadores_Click(object sender, EventArgs e)
-        {
-            string mensaje = "6/";
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-            server.Send(msg);
-        }
         private void UpdateConectadosGrid()
         {
             // Limpiar el DataGridView
             conectadosGrid.Rows.Clear();
+            comboBox1.Items.Clear();
 
             // Agregar los jugadores conectados al DataGridView
             foreach (var jugador in conectados)
             {
                 conectadosGrid.Rows.Add(jugador);
+                comboBox1.Items.Add(jugador);
             }
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //Mensaje de desconexión
-            string mensaje = "0/";
+            try
+            {
+                //Mensaje de desconexión
+                string mensaje = "0/";
 
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-            server.Send(msg);
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
 
-            // Nos desconectamos
-            atender.Abort();
-            this.BackColor = Color.Gray;
-            server.Shutdown(SocketShutdown.Both);
-            server.Close();
+                // Nos desconectamos
+                server.Shutdown(SocketShutdown.Both);
+                server.Close();
+                atender.Abort();
+            }
+            catch (Exception ex) { }
+            
+        }
 
+        private void Invitar_Click(object sender, EventArgs e)
+        {
+            if (comboBox1.Text == usuario)
+            {
+                MessageBox.Show("No te puedes invitar a ti mismo");
+            }
+            else
+            {
+                string mensaje = "6/" + usuario + "/" + comboBox1.Text;
+                byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                server.Send(msg);
+            }           
         }
     }
 }
