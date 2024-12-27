@@ -37,6 +37,9 @@ namespace Cliente
             conectadosGrid.Visible = false;
             Iniciar_sesion.Visible = false;
             Registrarse.Visible = false;
+            chat.Visible = false;
+            Mensaje.Visible = false;
+            Enviar.Visible = false;
         }
         private string usuario;
         private void AtenderServidor()
@@ -90,8 +93,9 @@ namespace Cliente
                             server.Send(msg2);
                         }
                         break;
-                    case 8 :
-                        MessageBox.Show(mensaje);
+                    case 8:
+                        mensaje = chat.Text+"\n" + mensaje;
+                        chat.Text = mensaje+ Environment.NewLine;
                         break;
                 }
             }
@@ -100,7 +104,7 @@ namespace Cliente
         {
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
-            IPAddress direc = IPAddress.Parse("192.168.0.41");
+            IPAddress direc = IPAddress.Parse("192.168.0.40");
             IPEndPoint ipep = new IPEndPoint(direc, 9050);
 
 
@@ -159,6 +163,10 @@ namespace Cliente
                 comboBox1.Visible = false;
                 Invitar.Visible = false;
                 conectadosGrid.Visible = false;
+                chat.Visible = false;
+                Mensaje.Visible = false;
+                Enviar.Visible = false;
+                chat.Clear();
 
 
             }
@@ -197,6 +205,9 @@ namespace Cliente
             comboBox1.Visible = true;
             Invitar.Visible = true;
             conectadosGrid.Visible = true;
+            chat.Visible = true;
+            Mensaje.Visible = true;
+            Enviar.Visible = true;
         }    
 
         private void Registrarse_Click(object sender, EventArgs e)
@@ -294,6 +305,22 @@ namespace Cliente
                 byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
                 server.Send(msg);
             }           
+        }
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Enviar_Click(object sender, EventArgs e)
+        {
+            string mensaje = "8/"+usuario+ "/"+ Mensaje.Text;
+            if (string.IsNullOrEmpty(mensaje))
+            {
+                return;
+            }
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
         }
     }
 }

@@ -130,7 +130,7 @@ void *AtenderCliente(void *socket)
 		
         char *p = strtok(peticion, "/");
         int codigo = atoi(p);
-        if (codigo != 0 && codigo !=6 && codigo != 7) 
+        if (codigo != 0 && codigo !=6 && codigo != 7 && codigo !=8) 
 		{
             p = strtok(NULL, "/");
             strcpy(nombre, p);
@@ -314,7 +314,7 @@ void *AtenderCliente(void *socket)
             }
             write(sock_conn, respuesta, strlen(respuesta));
 		}
-		else if (codigo == 6)
+		else if (codigo == 6) //invitacion
 		{
 			int i;
 			char usuario_1[MAX_NOMBRE];
@@ -332,7 +332,7 @@ void *AtenderCliente(void *socket)
 			sprintf(respuesta, "6/%s", usuario_1);
 			write(Clis.cliente[i].sock, respuesta, strlen(respuesta));
         }
-		else if (codigo == 7)
+		else if (codigo == 7) //respuesta invitacion
 		{
 			int i;
 			char usuario_1[MAX_NOMBRE];
@@ -350,15 +350,26 @@ void *AtenderCliente(void *socket)
 			p = strtok(NULL, "/");
 			if ( strcmp(p, "si")==0)
 			{
-				sprintf( respuesta, "7/%s ha aceptado la invitacin", usuario_1);
+				sprintf( respuesta, "7/%s ha aceptado la invitacion", usuario_1);
 				write(Clis.cliente[i].sock, respuesta, strlen(respuesta));
 			}
 			if ( strcmp(p, "no")==0)
 			{
-				sprintf( respuesta, "7/%s ha rechazado la invitacin", usuario_1);
+				sprintf( respuesta, "7/%s ha rechazado la invitacion", usuario_1);
 				write(Clis.cliente[i].sock, respuesta, strlen(respuesta));
 			}
-			
+		}
+		else if ( codigo == 8) //mensaje de chat
+		{
+			char usuario_1[MAX_NOMBRE];
+			p = strtok(NULL,"/");
+			strcpy(usuario_1, p);
+			p = strtok(NULL, "/");
+			sprintf(respuesta,"8/%s: %s", usuario_1,p);
+			for  (int i =0; i < Clis.numero_clientes; i++)
+			{
+				write(Clis.cliente[i].sock, respuesta, strlen(respuesta));
+			}
 		}
     }
     close(sock_conn);

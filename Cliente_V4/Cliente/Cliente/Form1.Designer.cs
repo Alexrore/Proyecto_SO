@@ -50,6 +50,9 @@ namespace Cliente
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label_invitar = new System.Windows.Forms.Label();
             this.Invitar = new System.Windows.Forms.Button();
+            this.chat = new System.Windows.Forms.RichTextBox();
+            this.Mensaje = new System.Windows.Forms.TextBox();
+            this.Enviar = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.conectadosGrid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -260,11 +263,41 @@ namespace Cliente
             this.Invitar.UseVisualStyleBackColor = true;
             this.Invitar.Click += new System.EventHandler(this.Invitar_Click);
             // 
+            // chat
+            // 
+            this.chat.Location = new System.Drawing.Point(39, 408);
+            this.chat.Name = "chat";
+            this.chat.ReadOnly = true;
+            this.chat.Size = new System.Drawing.Size(465, 267);
+            this.chat.TabIndex = 19;
+            this.chat.Text = "";
+            this.chat.TextChanged += new System.EventHandler(this.richTextBox1_TextChanged);
+            // 
+            // Mensaje
+            // 
+            this.Mensaje.Location = new System.Drawing.Point(39, 696);
+            this.Mensaje.Name = "Mensaje";
+            this.Mensaje.Size = new System.Drawing.Size(465, 20);
+            this.Mensaje.TabIndex = 20;
+            // 
+            // Enviar
+            // 
+            this.Enviar.Location = new System.Drawing.Point(526, 685);
+            this.Enviar.Name = "Enviar";
+            this.Enviar.Size = new System.Drawing.Size(100, 40);
+            this.Enviar.TabIndex = 21;
+            this.Enviar.Text = "Enviar";
+            this.Enviar.UseVisualStyleBackColor = true;
+            this.Enviar.Click += new System.EventHandler(this.Enviar_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 427);
+            this.ClientSize = new System.Drawing.Size(704, 847);
+            this.Controls.Add(this.Enviar);
+            this.Controls.Add(this.Mensaje);
+            this.Controls.Add(this.chat);
             this.Controls.Add(this.Invitar);
             this.Controls.Add(this.label_invitar);
             this.Controls.Add(this.comboBox1);
@@ -316,6 +349,9 @@ namespace Cliente
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label_invitar;
         private Button Invitar;
+        private RichTextBox chat;
+        private TextBox Mensaje;
+        private Button Enviar;
     }
 }
 
