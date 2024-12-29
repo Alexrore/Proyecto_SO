@@ -40,3 +40,13 @@ C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\InicioPar
 C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\InicioPartida\obj\Debug\InicioPartida.csproj.CoreCompileInputs.cache
 C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\InicioPartida\obj\Debug\InicioPartida.exe
 C:\Users\aaron\Downloads\Projectv3\Proyecto_SO-main\Cliente_V3\Cliente\InicioPartida\obj\Debug\InicioPartida.pdb
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\bin\Debug\InicioPartida.exe.config
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\bin\Debug\InicioPartida.exe
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\bin\Debug\InicioPartida.pdb
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\obj\Debug\InicioPartida.csproj.AssemblyReference.cache
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\obj\Debug\InicioPartida.Form2.resources
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\obj\Debug\InicioPartida.Properties.Resources.resources
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\obj\Debug\InicioPartida.csproj.GenerateResource.cache
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\obj\Debug\InicioPartida.csproj.CoreCompileInputs.cache
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\obj\Debug\InicioPartida.exe
+C:\Users\Alexr\Downloads\Proyecto_SO-main\Cliente_V4\Cliente\InicioPartida\obj\Debug\InicioPartida.pdb

@@ -228,7 +228,7 @@ namespace Cliente
 
         private void IniciarPartida_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2(server);
+            Form2 f2 = new Form2(server, conectados, usuario, atender);
             f2.ShowDialog();
         }
 
@@ -321,6 +321,7 @@ namespace Cliente
             }
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
+            Mensaje.Clear();
         }
     }
 }

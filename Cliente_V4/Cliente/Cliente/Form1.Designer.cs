@@ -294,7 +294,7 @@ namespace Cliente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(704, 847);
+            this.ClientSize = new System.Drawing.Size(704, 745);
             this.Controls.Add(this.Enviar);
             this.Controls.Add(this.Mensaje);
             this.Controls.Add(this.chat);
