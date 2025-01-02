@@ -25,14 +25,21 @@ typedef struct
 
 } Cliente_Lista;
 
+typedef struct
+{
+	Cliente cliente[4];
+	int numero_clientes;
+	
+} Jugadores_Lista;
 //Variables 
 MYSQL *conn;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int Socket[100];
 Cliente_Lista Clis;
 char query[512];
+Jugadores_Lista Jlis;
 
-void conectarBD() {
+void conectarBD() { 
 	conn = mysql_init(NULL);
 	if (conn == NULL) {
 		printf("Error al crear la conexion: %u %s\n", mysql_errno(NULL), mysql_error(NULL));
@@ -45,6 +52,37 @@ void conectarBD() {
 		mysql_close(conn);  // Limpiar la conexion si falla
 		exit(1);
 		
+	}
+}
+void ListaJugadores(char nombre_1[MAX_NOMBRE], char nombre_2[MAX_NOMBRE])
+{
+	
+	if (Jlis.numero_clientes == 0) {
+		strcpy(Jlis.cliente[0].Nombre, nombre_1);
+		Jlis.numero_clientes++;
+		strcpy(Jlis.cliente[1].Nombre, nombre_2);
+		Jlis.numero_clientes++;
+	} else if (Jlis.numero_clientes < MAX_CLIENTES) { 
+		strcpy(Jlis.cliente[Jlis.numero_clientes].Nombre, nombre_2);
+		Jlis.numero_clientes++;
+	}
+	char Jugadores[1024];
+	sprintf(Jugadores, "9/");
+	for (int j = 0; j < Jlis.numero_clientes; j++)
+	{
+		strcat (Jugadores, Jlis.cliente[j].Nombre);
+		strcat (Jugadores, " ");
+	}
+	printf(Jugadores);
+	for (int i= 0; i<Jlis.numero_clientes; i++)
+	{
+		for (int j=0; j<Clis.numero_clientes;j++)
+		{
+			if(strcmp(Jlis.cliente[i].Nombre, Clis.cliente[j].Nombre)==0)
+			{
+				write(Clis.cliente[j].sock, Jugadores, strlen(Jugadores));
+			}
+		}
 	}
 }
 
@@ -81,6 +119,20 @@ void actualizar_onlines(int sock_cliente, int codigo, char nom[MAX_NOMBRE])
 						cont++;
 					}
 					Clis.numero_clientes--;
+				}
+			}
+			for (int u = 0; u < Jlis.numero_clientes; u++)
+			{
+				if (strcmp(Jlis.cliente[u].Nombre, nom) == 0)
+				{
+					int cont = u;
+					while (cont < Jlis.numero_clientes)
+					{
+						Jlis.cliente[cont].sock = Jlis.cliente[cont+1].sock;
+						strcpy(Jlis.cliente[cont].Nombre, Jlis.cliente[cont+1].Nombre);
+						cont++;
+					}
+					Jlis.numero_clientes--;
 				}
 			}
 		}		
@@ -197,17 +249,26 @@ void *AtenderCliente(void *socket)
             p = strtok(NULL, "/");
             strcpy(password, p);
 			respuesta[0] = '\0';
+			int cont=0;
 			
             sprintf(query, "SELECT * FROM Jugador WHERE Nombre='%s' AND contraseña='%s'", nombre, password);
+			for (int i =0; i<Clis.numero_clientes;i++)
+			{
+				if(strcmp(nombre, Clis.cliente[i].Nombre)==0)
+				{
+					cont++;
+				}
+			}
             if (mysql_query(conn, query)) 
 			{
                 printf("Error en la consulta: %s\n", mysql_error(conn));
             } 
 			
+			
 			else 
 			{
                 MYSQL_RES *res = mysql_store_result(conn);
-                if (mysql_num_rows(res) > 0) 
+                if (mysql_num_rows(res) > 0 && cont==0) 
 				{
                     printf("Inicio de sesion exitoso\n");
 					actualizar_onlines(sock_conn, 1, nombre);
@@ -351,6 +412,7 @@ void *AtenderCliente(void *socket)
 			if ( strcmp(p, "si")==0)
 			{
 				sprintf( respuesta, "7/%s ha aceptado la invitacion", usuario_1);
+				ListaJugadores(nombre, usuario_1);
 				write(Clis.cliente[i].sock, respuesta, strlen(respuesta));
 			}
 			if ( strcmp(p, "no")==0)

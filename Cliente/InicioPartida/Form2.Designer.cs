@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
             this.Tablero = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tirardado = new System.Windows.Forms.Button();
             this.labelnumero = new System.Windows.Forms.Label();
             this.seleccionarficha = new System.Windows.Forms.Button();
@@ -66,12 +65,15 @@
             this.Ficha_2_Y = new System.Windows.Forms.Label();
             this.Ficha_1_Y = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.jugadoresGrid = new System.Windows.Forms.DataGridView();
+            this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Tablero.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.conectadosGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.jugadoresGrid)).BeginInit();
             this.SuspendLayout();
             // 
             // Tablero
@@ -98,15 +100,6 @@
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Turno";
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(16, 280);
-            this.textBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(158, 78);
-            this.textBox1.TabIndex = 0;
             // 
             // tirardado
             // 
@@ -413,11 +406,34 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // jugadoresGrid
+            // 
+            this.jugadoresGrid.AllowUserToAddRows = false;
+            this.jugadoresGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.jugadoresGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.jugadoresGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridViewTextBoxColumn1});
+            this.jugadoresGrid.Enabled = false;
+            this.jugadoresGrid.Location = new System.Drawing.Point(16, 225);
+            this.jugadoresGrid.Margin = new System.Windows.Forms.Padding(2);
+            this.jugadoresGrid.Name = "jugadoresGrid";
+            this.jugadoresGrid.RowHeadersWidth = 51;
+            this.jugadoresGrid.RowTemplate.Height = 24;
+            this.jugadoresGrid.Size = new System.Drawing.Size(172, 125);
+            this.jugadoresGrid.TabIndex = 46;
+            // 
+            // dataGridViewTextBoxColumn1
+            // 
+            this.dataGridViewTextBoxColumn1.HeaderText = "Jugadores";
+            this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
+            this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1162, 552);
+            this.Controls.Add(this.jugadoresGrid);
             this.Controls.Add(this.Ficha_4_Y);
             this.Controls.Add(this.Ficha_3_Y);
             this.Controls.Add(this.Ficha_2_Y);
@@ -449,7 +465,6 @@
             this.Controls.Add(this.seleccionarficha);
             this.Controls.Add(this.labelnumero);
             this.Controls.Add(this.tirardado);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.Tablero);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form2";
@@ -462,6 +477,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.jugadoresGrid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -471,7 +487,6 @@
 
         private System.Windows.Forms.GroupBox Tablero;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button tirardado;
         private System.Windows.Forms.Label labelnumero;
         private System.Windows.Forms.Button seleccionarficha;
@@ -505,6 +520,8 @@
         private System.Windows.Forms.Label Ficha_2_Y;
         private System.Windows.Forms.Label Ficha_1_Y;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.DataGridView jugadoresGrid;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
     }
 }
 

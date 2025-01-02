@@ -19,12 +19,15 @@ namespace InicioPartida
         Socket server;
         List<string> conectados = new List<string>();
         string usuario;
-        int ultimoConteo;
-        public Form2(Socket sock, List<string> Conectados, string Usuario, Thread Atender)
+        int Conectados_Cont, Jugadores_Cont;
+        List<string> jugadores = new List<string>();
+
+        public Form2(Socket sock, List<string> Conectados, string Usuario, Thread Atender, List<string> Jugadores)
         {
             conectados= Conectados;
             server = sock;
             usuario = Usuario;
+            jugadores= Jugadores;
             InitializeComponent();   
             UpdateConectadosGrid();
         }
@@ -55,6 +58,18 @@ namespace InicioPartida
 
             }
         }
+        public void UpdateInvitadosGrid()
+        {
+            // Limpiar el DataGridView
+            jugadoresGrid.Rows.Clear();
+
+            // Agregar los jugadores conectados al DataGridView
+            foreach (var jugador in jugadores)
+            {
+                jugadoresGrid.Rows.Add(jugador);
+
+            }
+        }
 
         private void Jugador_1_Click(object sender, EventArgs e)
         {
@@ -63,12 +78,19 @@ namespace InicioPartida
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (conectados.Count != ultimoConteo)
+            if (conectados.Count != Conectados_Cont)
             {
                 // El número de elementos en la lista ha cambiado
-                ultimoConteo = conectados.Count;
+                Conectados_Cont = conectados.Count;
                 UpdateConectadosGrid();
             }
+            if (jugadores.Count != Jugadores_Cont)
+            {
+
+                Jugadores_Cont = jugadores.Count;
+                UpdateInvitadosGrid();
+            }
+            
         }
 
         private void Invitar_Click_1(object sender, EventArgs e)

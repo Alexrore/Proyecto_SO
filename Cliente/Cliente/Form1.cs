@@ -20,6 +20,7 @@ namespace Cliente
         Socket server;
         Thread atender;
         List<string> conectados = new List<string>();
+        List<string> Jugadores_conectados = new List<string>();
         public Form1()
         {
             InitializeComponent();
@@ -51,19 +52,19 @@ namespace Cliente
 
                 switch (codigo)
                 {
-                    case 7:
-                        MessageBox.Show(mensaje);
-                        break;
                     case 1: //registro
                         MessageBox.Show(mensaje);
                         break;
                     case 2: //inicio de sesion
+                        Iniciar_sesion.Visible = false;
                         conectados.Clear();
 
                         // Obtener los nombres de los jugadores
                         string[] jugadores = mensaje.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         conectados.AddRange(jugadores);
+                        Invoke(new Action(Iniciar_Sesion));
                         Invoke(new Action(UpdateConectadosGrid));
+                        
                         break;
                     case 3: //consulta
                         MessageBox.Show(mensaje);
@@ -90,19 +91,38 @@ namespace Cliente
                             server.Send(msg2);
                         }
                         break;
-                    case 8:
+                    case 7:
+                        MessageBox.Show(mensaje);
+                        break;
+                    case 8: //chat
                         mensaje = chat.Text+"\n" + mensaje;
                         chat.Text = mensaje+ Environment.NewLine;
                         break;
                     case 9:
-                        // Envía datos o notificaciones a Form2
-                        if (Application.OpenForms["Form2"] is Form2 form2)
-                        {
-                            form2.Invoke(new Action(() => form2.UpdateConectadosGrid()));
-                        }
+                        jugadores = mensaje.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        Jugadores_conectados.AddRange(jugadores);
                         break;
+
                 }
             }
+        }
+        void Iniciar_Sesion()
+        {
+            Iniciar_sesion.Visible = false;
+            Registrarse.Visible = false;
+            label_contraseña.Visible = false;
+            textBox_Contraseña.Visible = false;
+            IniciarPartida.Visible = true;
+            label_ID.Visible = true;
+            textBox_Consulta.Visible = true;
+            Nombre.Visible = true;
+            Victorias.Visible = true;
+            Medallas.Visible = true;
+            Consulta.Visible = true;
+            conectadosGrid.Visible = true;
+            chat.Visible = true;
+            Mensaje.Visible = true;
+            Enviar.Visible = true;
         }
         private void Conectarse_Click(object sender, EventArgs e)
         {
@@ -152,7 +172,7 @@ namespace Cliente
                 this.BackColor = Color.White;
                 Conectrase.Visible=true;
                 Desconectarse.Visible=false;
-                Iniciar_sesion.Visible=false;
+                //Iniciar_sesion.Visible=false;
                 Registrarse.Visible=false;
                 IniciarPartida.Visible = false;
                 label_ID.Visible = false;
@@ -191,21 +211,8 @@ namespace Cliente
             string mensaje = "2/" + usuario + "/" + pswd;
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
-            Iniciar_sesion.Visible=false;
-            Registrarse.Visible=false;
-            label_contraseña.Visible=false;
-            textBox_Contraseña.Visible = false;
-            IniciarPartida.Visible = true;
-            label_ID.Visible = true;
-            textBox_Consulta.Visible = true;
-            Nombre.Visible = true;
-            Victorias.Visible = true;
-            Medallas.Visible = true;
-            Consulta.Visible = true;
-            conectadosGrid.Visible = true;
-            chat.Visible = true;
-            Mensaje.Visible = true;
-            Enviar.Visible = true;
+           
+
         }    
 
         private void Registrarse_Click(object sender, EventArgs e)
@@ -226,7 +233,7 @@ namespace Cliente
 
         private void IniciarPartida_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2(server, conectados, usuario, atender);
+            Form2 f2 = new Form2(server, conectados, usuario, atender, Jugadores_conectados);
             f2.ShowDialog();
         }
 
