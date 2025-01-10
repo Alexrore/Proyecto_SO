@@ -21,13 +21,22 @@ namespace InicioPartida
         string usuario;
         int Conectados_Cont, Jugadores_Cont;
         List<string> jugadores = new List<string>();
-
-        public Form2(Socket sock, List<string> Conectados, string Usuario, Thread Atender, List<string> Jugadores)
+        Random random = new Random();
+        int[] dado = new int[2]; 
+        int [] ficha_Roja = new int[4];
+        int[] ficha_Verde = new int[4];
+        int[] ficha_Azul = new int[4];
+        int[] ficha_Amarilla = new int[4];
+        string fichas;
+        int partida;
+        public Form2(Socket sock, List<string> Conectados, string Usuario, Thread Atender, List<string> Jugadores, string Fichas, int Partida)
         {
             conectados= Conectados;
             server = sock;
             usuario = Usuario;
             jugadores= Jugadores;
+            fichas = Fichas;
+            partida = Partida;
             InitializeComponent();   
             UpdateConectadosGrid();
         }
@@ -35,7 +44,6 @@ namespace InicioPartida
         private void f2_Load(object sender, EventArgs e)
         {
             Tablero.BackgroundImageLayout = ImageLayout.Stretch;
-            labelnumero.Text = "?";
             Tablero.Visible = true;
 
         }
@@ -108,7 +116,38 @@ namespace InicioPartida
                 Jugadores_Cont = jugadores.Count;
                 UpdateInvitadosGrid();
             }
+            if (partida == 1)
+            {
+                inicio();
+                partida = 0;
+            }
             
+        }
+
+        private void tirardado_Click(object sender, EventArgs e)
+        {
+            dado[0] = random.Next(1, 7);
+            dado[1] = random.Next(1, 7);
+            Dado_1.Text = "Dado 1: " + Convert.ToString(dado[0]);
+            Dado_2.Text = "Dado 2: " + Convert.ToString(dado[1]);
+        }
+
+        private void Iniciar_Parida_Click(object sender, EventArgs e)
+        {
+            if (jugadores.Count == 1 || jugadores.Count == 0)
+            {
+                MessageBox.Show("Inviata a mas jugadores");
+            }
+            else
+            {
+                Invoke(new Action(() => Actualizar_fichas()));
+                Invoke(new Action(() => inicio()));
+                
+              
+
+
+            }
+           
         }
 
         private void Invitar_Click_1(object sender, EventArgs e)
@@ -128,6 +167,115 @@ namespace InicioPartida
                 server.Send(msg);
             }
 
+        }
+        private void inicio()
+        {
+            label_invitar.Visible = false;
+            Invitar.Visible = false;
+            comboBox1.Visible = false;
+            Iniciar_Parida.Visible = false;
+            for (int i = 0; i < 3; i++)
+            {
+                ficha_Verde[i] = 0;
+                ficha_Roja[i] = 0;
+                ficha_Azul[i] = 0;
+                ficha_Amarilla[i] = 0;
+            }
+            Actualizar_otras_fichas();
+            if (jugadores.Count == 2)
+            {
+                Jugador_3.Visible = false;
+                pictureBox3.Visible = false;
+                Jugador_4.Visible = false;
+                pictureBox4.Visible = false;
+                Ficha_1_B.Visible = false;
+                Ficha_2_B.Visible = false;
+                Ficha_3_B.Visible = false;
+                Ficha_4_B.Visible = false;
+                Ficha_1_Y.Visible = false;
+                Ficha_2_Y.Visible = false;
+                Ficha_3_Y.Visible = false;
+                Ficha_4_Y.Visible = false;
+            }
+            if (jugadores.Count == 3)
+            {
+                Jugador_4.Visible = false;
+                pictureBox4.Visible = false;
+                Ficha_1_Y.Visible = false;
+                Ficha_2_Y.Visible = false;
+                Ficha_3_Y.Visible = false;
+                Ficha_4_Y.Visible = false;
+            }
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes("10/");
+            server.Send(msg);
+        }
+        private void Actualizar_fichas() //Actualiza las fichas cuando mueves tu y las envia
+        {
+            //Azules
+            Ficha_1_B.Text = "Ficha 1: " + Convert.ToString(ficha_Azul[0]);
+            Ficha_2_B.Text = "Ficha 2: " + Convert.ToString(ficha_Azul[1]);
+            Ficha_3_B.Text = "Ficha 3: " + Convert.ToString(ficha_Azul[2]);
+            Ficha_4_B.Text = "Ficha 4: " + Convert.ToString(ficha_Azul[3]);
+            //Verdes
+            Ficha_1_G.Text = "Ficha 1: " + Convert.ToString(ficha_Verde[0]);
+            Ficha_2_G.Text = "Ficha 2: " + Convert.ToString(ficha_Verde[1]);
+            Ficha_3_G.Text = "Ficha 3: " + Convert.ToString(ficha_Verde[2]);
+            Ficha_4_G.Text = "Ficha 4: " + Convert.ToString(ficha_Verde[3]);
+            //Rojas
+            Ficha_1_R.Text = "Ficha 1: " + Convert.ToString(ficha_Roja[0]);
+            Ficha_2_R.Text = "Ficha 2: " + Convert.ToString(ficha_Roja[1]);
+            Ficha_3_R.Text = "Ficha 3: " + Convert.ToString(ficha_Roja[2]);
+            Ficha_4_R.Text = "Ficha 4: " + Convert.ToString(ficha_Roja[3]);
+            //Amarillas
+            Ficha_1_Y.Text = "Ficha 1: " + Convert.ToString(ficha_Amarilla[0]);
+            Ficha_2_Y.Text = "Ficha 2: " + Convert.ToString(ficha_Amarilla[1]);
+            Ficha_3_Y.Text = "Ficha 3: " + Convert.ToString(ficha_Amarilla[2]);
+            Ficha_4_Y.Text = "Ficha 4: " + Convert.ToString(ficha_Amarilla[3]);
+            string fichas_enviar = "11/" + 
+                Convert.ToString(ficha_Azul[0]) + "/" +
+                Convert.ToString(ficha_Azul[1]) + "/" +
+                Convert.ToString(ficha_Azul[2]) + "/" +
+                Convert.ToString(ficha_Azul[3]) + "/" +
+
+                Convert.ToString(ficha_Verde[0]) + "/" +
+                Convert.ToString(ficha_Verde[1]) + "/" +
+                Convert.ToString(ficha_Verde[2]) + "/" +
+                Convert.ToString(ficha_Verde[3]) + "/" +
+
+                Convert.ToString(ficha_Roja[0]) + "/" +
+                Convert.ToString(ficha_Roja[1]) + "/" +
+                Convert.ToString(ficha_Roja[2]) + "/" +
+                Convert.ToString(ficha_Roja[3]) + "/" +
+
+                Convert.ToString(ficha_Amarilla[0]) + "/" +
+                Convert.ToString(ficha_Amarilla[1]) + "/" +
+                Convert.ToString(ficha_Amarilla[2]) + "/" +
+                Convert.ToString(ficha_Amarilla[3]);
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(fichas_enviar);
+            server.Send(msg);
+        }
+        private void Actualizar_otras_fichas() //Actualiza las fichas cuando las recibe de los otros
+        {
+            string[] trozos = fichas.Split('/');
+            ficha_Azul[0] = Convert.ToInt32(trozos[0]);
+            ficha_Azul[1] = Convert.ToInt32(trozos[1]);
+            ficha_Azul[2] = Convert.ToInt32(trozos[2]);
+            ficha_Azul[3] = Convert.ToInt32(trozos[3]);
+            
+            ficha_Verde[0] = Convert.ToInt32(trozos[4]);
+            ficha_Verde[1] = Convert.ToInt32(trozos[5]);
+            ficha_Verde[2] = Convert.ToInt32(trozos[6]);
+            ficha_Verde[3] = Convert.ToInt32(trozos[7]);
+
+            ficha_Roja[0] = Convert.ToInt32(trozos[8]);
+            ficha_Roja[1] = Convert.ToInt32(trozos[9]);
+            ficha_Roja[2] = Convert.ToInt32(trozos[10]);
+            ficha_Roja[3] = Convert.ToInt32(trozos[11]);
+
+            ficha_Amarilla[0] = Convert.ToInt32(trozos[12]);
+            ficha_Amarilla[1] = Convert.ToInt32(trozos[13]);
+            ficha_Amarilla[2] = Convert.ToInt32(trozos[14]);
+            ficha_Amarilla[3] = Convert.ToInt32(trozos[15]);
         }
     }
 }

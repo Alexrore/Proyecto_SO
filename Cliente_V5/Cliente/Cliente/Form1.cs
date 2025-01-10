@@ -40,6 +40,7 @@ namespace Cliente
             Enviar.Visible = false;
         }
         private string usuario;
+        private string fichas;
         private void AtenderServidor()
         {
             while (true)
@@ -102,6 +103,14 @@ namespace Cliente
                         jugadores = mensaje.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         Jugadores_conectados.AddRange(jugadores);
                         break;
+                    case 10:
+                        Form2 f2 = new Form2(server, conectados, usuario, atender, Jugadores_conectados, fichas, 1);
+                        f2.ShowDialog();
+                        break;
+
+                    case 11:
+                        fichas = mensaje;
+                        break;
 
                 }
             }
@@ -134,7 +143,7 @@ namespace Cliente
             //Creamos un IPEndPoint con el ip del servidor y puerto del servidor 
             //al que deseamos conectarnos
             IPAddress direc = IPAddress.Parse("10.4.119.5");
-            IPEndPoint ipep = new IPEndPoint(direc, 50064);
+            IPEndPoint ipep = new IPEndPoint(direc, 50065);
 
 
             //Creamos el socket 
@@ -238,7 +247,7 @@ namespace Cliente
 
         private void IniciarPartida_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2(server, conectados, usuario, atender, Jugadores_conectados);
+            Form2 f2 = new Form2(server, conectados, usuario, atender, Jugadores_conectados, fichas,0);
             f2.ShowDialog();
         }
 

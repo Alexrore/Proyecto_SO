@@ -33,9 +33,9 @@
             this.Tablero = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tirardado = new System.Windows.Forms.Button();
-            this.labelnumero = new System.Windows.Forms.Label();
             this.seleccionarficha = new System.Windows.Forms.Button();
             this.conectadosGrid = new System.Windows.Forms.DataGridView();
+            this.conected = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Invitar = new System.Windows.Forms.Button();
             this.label_invitar = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
@@ -56,7 +56,7 @@
             this.Jugador_3 = new System.Windows.Forms.Label();
             this.Ficha_4_B = new System.Windows.Forms.Label();
             this.Ficha_3_B = new System.Windows.Forms.Label();
-            this.Ficha2_B = new System.Windows.Forms.Label();
+            this.Ficha_2_B = new System.Windows.Forms.Label();
             this.Ficha_1_B = new System.Windows.Forms.Label();
             this.Jugador_4 = new System.Windows.Forms.Label();
             this.Ficha_4_Y = new System.Windows.Forms.Label();
@@ -66,7 +66,9 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.jugadoresGrid = new System.Windows.Forms.DataGridView();
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.conected = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Dado_1 = new System.Windows.Forms.Label();
+            this.Dado_2 = new System.Windows.Forms.Label();
+            this.Iniciar_Parida = new System.Windows.Forms.Button();
             this.Tablero.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.conectadosGrid)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -110,16 +112,7 @@
             this.tirardado.TabIndex = 4;
             this.tirardado.Text = "Tirar Dado";
             this.tirardado.UseVisualStyleBackColor = true;
-            // 
-            // labelnumero
-            // 
-            this.labelnumero.AutoSize = true;
-            this.labelnumero.Location = new System.Drawing.Point(57, 424);
-            this.labelnumero.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.labelnumero.Name = "labelnumero";
-            this.labelnumero.Size = new System.Drawing.Size(73, 13);
-            this.labelnumero.TabIndex = 5;
-            this.labelnumero.Text = "Numero Dado";
+            this.tirardado.Click += new System.EventHandler(this.tirardado_Click);
             // 
             // seleccionarficha
             // 
@@ -146,6 +139,11 @@
             this.conectadosGrid.RowTemplate.Height = 24;
             this.conectadosGrid.Size = new System.Drawing.Size(172, 179);
             this.conectadosGrid.TabIndex = 16;
+            // 
+            // conected
+            // 
+            this.conected.HeaderText = "Conectados";
+            this.conected.Name = "conected";
             // 
             // Invitar
             // 
@@ -329,14 +327,14 @@
             this.Ficha_3_B.TabIndex = 39;
             this.Ficha_3_B.Text = "Ficha 3:";
             // 
-            // Ficha2_B
+            // Ficha_2_B
             // 
-            this.Ficha2_B.AutoSize = true;
-            this.Ficha2_B.Location = new System.Drawing.Point(1053, 275);
-            this.Ficha2_B.Name = "Ficha2_B";
-            this.Ficha2_B.Size = new System.Drawing.Size(45, 13);
-            this.Ficha2_B.TabIndex = 38;
-            this.Ficha2_B.Text = "Ficha 2:";
+            this.Ficha_2_B.AutoSize = true;
+            this.Ficha_2_B.Location = new System.Drawing.Point(1053, 275);
+            this.Ficha_2_B.Name = "Ficha_2_B";
+            this.Ficha_2_B.Size = new System.Drawing.Size(45, 13);
+            this.Ficha_2_B.TabIndex = 38;
+            this.Ficha_2_B.Text = "Ficha 2:";
             // 
             // Ficha_1_B
             // 
@@ -420,16 +418,43 @@
             this.dataGridViewTextBoxColumn1.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn1.Name = "dataGridViewTextBoxColumn1";
             // 
-            // conected
+            // Dado_1
             // 
-            this.conected.HeaderText = "Conectados";
-            this.conected.Name = "conected";
+            this.Dado_1.AutoSize = true;
+            this.Dado_1.Location = new System.Drawing.Point(13, 440);
+            this.Dado_1.Name = "Dado_1";
+            this.Dado_1.Size = new System.Drawing.Size(45, 13);
+            this.Dado_1.TabIndex = 47;
+            this.Dado_1.Text = "Dado 1:";
+            // 
+            // Dado_2
+            // 
+            this.Dado_2.AutoSize = true;
+            this.Dado_2.Location = new System.Drawing.Point(108, 440);
+            this.Dado_2.Name = "Dado_2";
+            this.Dado_2.Size = new System.Drawing.Size(45, 13);
+            this.Dado_2.TabIndex = 48;
+            this.Dado_2.Text = "Dado 2:";
+            // 
+            // Iniciar_Parida
+            // 
+            this.Iniciar_Parida.Location = new System.Drawing.Point(332, 491);
+            this.Iniciar_Parida.Margin = new System.Windows.Forms.Padding(2);
+            this.Iniciar_Parida.Name = "Iniciar_Parida";
+            this.Iniciar_Parida.Size = new System.Drawing.Size(100, 40);
+            this.Iniciar_Parida.TabIndex = 49;
+            this.Iniciar_Parida.Text = "Iniciar";
+            this.Iniciar_Parida.UseVisualStyleBackColor = true;
+            this.Iniciar_Parida.Click += new System.EventHandler(this.Iniciar_Parida_Click);
             // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1162, 552);
+            this.Controls.Add(this.Iniciar_Parida);
+            this.Controls.Add(this.Dado_2);
+            this.Controls.Add(this.Dado_1);
             this.Controls.Add(this.jugadoresGrid);
             this.Controls.Add(this.Ficha_4_Y);
             this.Controls.Add(this.Ficha_3_Y);
@@ -438,7 +463,7 @@
             this.Controls.Add(this.Jugador_4);
             this.Controls.Add(this.Ficha_4_B);
             this.Controls.Add(this.Ficha_3_B);
-            this.Controls.Add(this.Ficha2_B);
+            this.Controls.Add(this.Ficha_2_B);
             this.Controls.Add(this.Ficha_1_B);
             this.Controls.Add(this.Jugador_3);
             this.Controls.Add(this.Ficha_4_R);
@@ -460,7 +485,6 @@
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.conectadosGrid);
             this.Controls.Add(this.seleccionarficha);
-            this.Controls.Add(this.labelnumero);
             this.Controls.Add(this.tirardado);
             this.Controls.Add(this.Tablero);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -485,7 +509,6 @@
         private System.Windows.Forms.GroupBox Tablero;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button tirardado;
-        private System.Windows.Forms.Label labelnumero;
         private System.Windows.Forms.Button seleccionarficha;
         private System.Windows.Forms.DataGridView conectadosGrid;
         private System.Windows.Forms.Button Invitar;
@@ -508,7 +531,7 @@
         private System.Windows.Forms.Label Jugador_3;
         private System.Windows.Forms.Label Ficha_4_B;
         private System.Windows.Forms.Label Ficha_3_B;
-        private System.Windows.Forms.Label Ficha2_B;
+        private System.Windows.Forms.Label Ficha_2_B;
         private System.Windows.Forms.Label Ficha_1_B;
         private System.Windows.Forms.Label Jugador_4;
         private System.Windows.Forms.Label Ficha_4_Y;
@@ -519,6 +542,9 @@
         private System.Windows.Forms.DataGridView jugadoresGrid;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
         private System.Windows.Forms.DataGridViewTextBoxColumn conected;
+        private System.Windows.Forms.Label Dado_1;
+        private System.Windows.Forms.Label Dado_2;
+        private System.Windows.Forms.Button Iniciar_Parida;
     }
 }
 
