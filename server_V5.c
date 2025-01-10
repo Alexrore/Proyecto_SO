@@ -8,7 +8,7 @@
 
 #define MAX_JUGADORES 10
 #define MAX_NOMBRE 20
-#define PUERTO 50064
+#define PUERTO 50065
 #define MAX_CLIENTES 10
 
 //Clases
@@ -181,7 +181,7 @@ void *AtenderCliente(void *socket)
 		
         char *p = strtok(peticion, "/");
         int codigo = atoi(p);
-        if (codigo != 0 && codigo !=6 && codigo != 7 && codigo !=8) 
+        if (codigo != 0 && codigo !=6 && codigo != 7 && codigo !=8 && codigo !=11) 
 		{
             p = strtok(NULL, "/");
             strcpy(nombre, p);
@@ -446,6 +446,29 @@ void *AtenderCliente(void *socket)
 				write(Clis.cliente[i].sock, respuesta, strlen(respuesta));
 			}
 		}
+		else if (codigo ==10)
+		{
+			respuesta[0] = '\0';
+			strcpy(respuesta, "10/");
+			printf ("%s",respuesta);
+	
+		for (int j=0; j<Clis.numero_clientes;j++)
+		{
+			
+				write(Jlis.cliente[j].sock, respuesta, strlen(respuesta));
+			
+		}
+	
+		}
+		
+		else if (codigo == 11)//enviar fichas
+		{
+			char fichas[256];
+			strcpy(fichas, p); 
+			sprintf(respuesta, "11/%s", fichas);
+			write(sock_conn, respuesta, strlen(respuesta));
+		}
+		
     }
     close(sock_conn);
     return NULL;
