@@ -451,12 +451,41 @@ void *AtenderCliente(void *socket)
 			strcpy(respuesta, "10/");
 
 	
-		for (int j=0; j<Clis.numero_clientes;j++)
-		{
+		
+			char usuario_1[MAX_NOMBRE];
+			char usuario_2[MAX_NOMBRE];
+			char usuario_3[MAX_NOMBRE];
 			
-				write(Jlis.cliente[j].sock, respuesta, strlen(respuesta));
-			
-		}
+			if (p != NULL && strcmp(p, "") == 0)
+			{
+				strcpy(usuario_1, p);
+				p = strtok(NULL, "/");
+			}
+			if (p != NULL && strcmp(p, "") == 0)
+			{
+				strcpy(usuario_2, p);
+				p = strtok(NULL, "/");
+			}
+			if (p != NULL && strcmp(p, "") == 0)
+			{
+				strcpy(usuario_3, p);
+				
+			}
+			strcpy(respuesta, "10/");
+			if (Clis.numero_clientes > 0 && Clis.numero_clientes <= MAX_CLIENTES)
+			{
+				for (int i = 0; i < Clis.numero_clientes; i++)
+				{
+					if (Clis.cliente[i].Nombre != NULL &&
+						(strcmp(usuario_1, Clis.cliente[i].Nombre) == 0 ||
+						 strcmp(usuario_2, Clis.cliente[i].Nombre) == 0 ||
+						 strcmp(usuario_3, Clis.cliente[i].Nombre) == 0))
+					{
+						write(Clis.cliente[i].sock, respuesta, strlen(respuesta));
+					}
+				}
+			}
+		
 	
 		}
 		
