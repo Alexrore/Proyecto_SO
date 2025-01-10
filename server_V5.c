@@ -181,7 +181,7 @@ void *AtenderCliente(void *socket)
 		
         char *p = strtok(peticion, "/");
         int codigo = atoi(p);
-        if (codigo != 0 && codigo !=6 && codigo != 7 && codigo !=8 && codigo !=11) 
+        if (codigo != 0 && codigo !=6 && codigo != 7 && codigo !=8 && codigo !=11 && codigo !=10) 
 		{
             p = strtok(NULL, "/");
             strcpy(nombre, p);
@@ -448,9 +448,8 @@ void *AtenderCliente(void *socket)
 		}
 		else if (codigo ==10)
 		{
-			respuesta[0] = '\0';
 			strcpy(respuesta, "10/");
-			printf ("%s",respuesta);
+
 	
 		for (int j=0; j<Clis.numero_clientes;j++)
 		{
