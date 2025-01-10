@@ -140,12 +140,9 @@ namespace InicioPartida
             }
             else
             {
-                Invoke(new Action(() => Actualizar_fichas()));
                 Invoke(new Action(() => inicio()));
+                Invoke(new Action(() => Actualizar_fichas()));
                 
-              
-
-
             }
            
         }
@@ -170,6 +167,18 @@ namespace InicioPartida
         }
         private void inicio()
         {
+            string iniciar;
+            iniciar = "10";
+            for(int i = 0; i < jugadores.Count; i++)
+            {
+                if (usuario != jugadores[i].ToString())
+                {
+                    iniciar = iniciar + "/" + jugadores[i].ToString();
+                }
+                
+            }
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(iniciar);
+            server.Send(msg);
             label_invitar.Visible = false;
             Invitar.Visible = false;
             comboBox1.Visible = false;
@@ -206,8 +215,7 @@ namespace InicioPartida
                 Ficha_3_Y.Visible = false;
                 Ficha_4_Y.Visible = false;
             }
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes("10/");
-            server.Send(msg);
+            
         }
         private void Actualizar_fichas() //Actualiza las fichas cuando mueves tu y las envia
         {
@@ -256,26 +264,29 @@ namespace InicioPartida
         }
         private void Actualizar_otras_fichas() //Actualiza las fichas cuando las recibe de los otros
         {
-            string[] trozos = fichas.Split('/');
-            ficha_Azul[0] = Convert.ToInt32(trozos[0]);
-            ficha_Azul[1] = Convert.ToInt32(trozos[1]);
-            ficha_Azul[2] = Convert.ToInt32(trozos[2]);
-            ficha_Azul[3] = Convert.ToInt32(trozos[3]);
-            
-            ficha_Verde[0] = Convert.ToInt32(trozos[4]);
-            ficha_Verde[1] = Convert.ToInt32(trozos[5]);
-            ficha_Verde[2] = Convert.ToInt32(trozos[6]);
-            ficha_Verde[3] = Convert.ToInt32(trozos[7]);
+            if (fichas != null)
+            {
+                string[] trozos = fichas.Split('/');
+                ficha_Azul[0] = Convert.ToInt32(trozos[0]);
+                ficha_Azul[1] = Convert.ToInt32(trozos[1]);
+                ficha_Azul[2] = Convert.ToInt32(trozos[2]);
+                ficha_Azul[3] = Convert.ToInt32(trozos[3]);
 
-            ficha_Roja[0] = Convert.ToInt32(trozos[8]);
-            ficha_Roja[1] = Convert.ToInt32(trozos[9]);
-            ficha_Roja[2] = Convert.ToInt32(trozos[10]);
-            ficha_Roja[3] = Convert.ToInt32(trozos[11]);
+                ficha_Verde[0] = Convert.ToInt32(trozos[4]);
+                ficha_Verde[1] = Convert.ToInt32(trozos[5]);
+                ficha_Verde[2] = Convert.ToInt32(trozos[6]);
+                ficha_Verde[3] = Convert.ToInt32(trozos[7]);
 
-            ficha_Amarilla[0] = Convert.ToInt32(trozos[12]);
-            ficha_Amarilla[1] = Convert.ToInt32(trozos[13]);
-            ficha_Amarilla[2] = Convert.ToInt32(trozos[14]);
-            ficha_Amarilla[3] = Convert.ToInt32(trozos[15]);
+                ficha_Roja[0] = Convert.ToInt32(trozos[8]);
+                ficha_Roja[1] = Convert.ToInt32(trozos[9]);
+                ficha_Roja[2] = Convert.ToInt32(trozos[10]);
+                ficha_Roja[3] = Convert.ToInt32(trozos[11]);
+
+                ficha_Amarilla[0] = Convert.ToInt32(trozos[12]);
+                ficha_Amarilla[1] = Convert.ToInt32(trozos[13]);
+                ficha_Amarilla[2] = Convert.ToInt32(trozos[14]);
+                ficha_Amarilla[3] = Convert.ToInt32(trozos[15]);
+            }
         }
     }
 }

@@ -41,6 +41,7 @@ namespace Cliente
         }
         private string usuario;
         private string fichas;
+        private bool formAbierto=false;
         private void AtenderServidor()
         {
             while (true)
@@ -103,12 +104,20 @@ namespace Cliente
                         jugadores = mensaje.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         Jugadores_conectados.AddRange(jugadores);
                         break;
-                    case 10:
-                        Form2 f2 = new Form2(server, conectados, usuario, atender, Jugadores_conectados, fichas, 1);
-                        f2.ShowDialog();
-                        break;
+                    case 10://abre form 2 para los jugadores que han sido invitados
+                        if (!formAbierto)
+                        {
 
-                    case 11:
+                            Invoke(new Action(() =>
+                            {
+                                Form_2(1);
+                            }));
+                        }
+                        break;
+                        
+
+                    case 11: //envia las fichas que ha movido otra persona al form 2
+
                         fichas = mensaje;
                         break;
 
@@ -244,11 +253,15 @@ namespace Cliente
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
         }
-
+        private void Form_2(int i)
+        {
+            Form2 f2 = new Form2(server, conectados, usuario, atender, Jugadores_conectados, fichas, i);
+            f2.Show();
+            formAbierto = true;
+        }
         private void IniciarPartida_Click(object sender, EventArgs e)
         {
-            Form2 f2 = new Form2(server, conectados, usuario, atender, Jugadores_conectados, fichas,0);
-            f2.ShowDialog();
+            Form_2(0);
         }
 
         private void Consulta_Click(object sender, EventArgs e)
